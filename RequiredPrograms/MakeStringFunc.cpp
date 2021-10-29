@@ -1,23 +1,35 @@
-#include "Processor.h"
+#include "../include/Assembler.h"
+
+int GetFileNames (Text *text, int argc, char* argv[])
+{
+    if (argc == 2)
+    {
+        text->input_file_name = argv[1];
+
+        return 0;
+    }
+    else
+        return 1;
+}
 
 int ReadFromFile (Text *text)
 {
-	text->input_file_name = (char*) calloc(20, sizeof(char));
-	printf("Enter name of input file: "); //TODO починить ввод файла с клавиатуры
-	scanf("%s", text->input_file_name);
 
-	FILE *fp = NULL;
+	FILE *fp = nullptr;
 
 	fp = fopen(text->input_file_name, "r");
 
-	if (fp == NULL)
-		return WRONG_INPUT_FILE;
+	if (fp == nullptr)
+    {
+        printf("Wrong input file");
+        return WRONG_INPUT_FILE;
+    }
 
-	text->size_of_input_file = GetSizeOfFile(fp); //TODO автоматически определять размер файла
+	size_t size_of_file = GetSizeOfFile(fp);
 
-	text->buffer = (char*) calloc(text->size_of_input_file, sizeof(char));
+	text->buffer = (char*) calloc(size_of_file, sizeof(char));
 
-	int sz = fread(text->buffer, sizeof(char), text->size_of_input_file, fp);
+	size_t sz = fread(text->buffer, sizeof(char), size_of_file, fp);
 	text->buffer[sz] = EOF;
 
 	fclose(fp);
@@ -25,17 +37,13 @@ int ReadFromFile (Text *text)
 	return 0;
 }
 
-FILE* OpenFileWrite ()
+FILE* OpenFileWrite (Text* text)
 {
-	char *file_name = (char*) calloc(20, sizeof(char));
 
-	printf("Enter name of output file: "); //TODO починить ввод файла с клавиатуры
-	scanf("%s", file_name);
-
-	FILE *fp = fopen(file_name, "w");
+	FILE *fp = fopen(text->output_file_name, "w");
 
 	if (!fp)
-		return NULL;
+		return nullptr;
 
 	return fp;
 }
@@ -43,7 +51,7 @@ FILE* OpenFileWrite ()
 size_t GetSizeOfFile (FILE* fp)
 {
 	fseek(fp, 0, SEEK_END); //переводим указатель на конец файла
-	int size_of_file = ftell(fp); //считаем количество байт на которое указатель отстоит от начала файла
+	size_t size_of_file = ftell(fp); //считаем количество байт на которое указатель отстоит от начала файла
 	rewind(fp); //возвращает указатель на начало файла
 
 	return size_of_file + 1;
@@ -51,20 +59,17 @@ size_t GetSizeOfFile (FILE* fp)
 
 void WriteToFile (Text *text, FILE *fp)
 {
-	assert(fp != NULL);
-
-	static int counter = 1;
+	assert(fp != nullptr);
 
 	fseek(fp, 0, SEEK_END);
 
 	for (size_t i = 0; i < text->num_of_strings; i++)
 		fprintf(fp, "%s\n", text->strings[i].ptr);
-	counter++;
 }
 
 void CloseFile (FILE *fp)
 {
-	assert(fp != NULL);
+	assert(fp != nullptr);
 
 	fclose(fp);
 }
@@ -77,17 +82,12 @@ void MakeString (Text *text)
 		sizeof(String));
 
 	char *string_ptr = text->buffer;
-	char *newline_pos = NULL;
+	char *newline_pos = nullptr;
 	int string_ctr = 0;
 
-	while ((newline_pos = strchr (string_ptr, '\n')) || 
+	while ((newline_pos = strchr (string_ptr, '\n')) ||
 		(newline_pos = strchr (string_ptr, EOF)))
 	{
-		if((long unsigned int)string_ctr >= text->num_of_strings) 
-		{
-			*newline_pos = '\0';
-			break;
-		}
 		*newline_pos = '\0';
 
 		text->strings[string_ctr].ptr = string_ptr;
@@ -96,6 +96,12 @@ void MakeString (Text *text)
 		string_ptr = newline_pos + 1;
 
 		string_ctr++;
+
+        if((long unsigned int)string_ctr >= text->num_of_strings)
+        {
+            *newline_pos = '\0';
+            break;
+        }
 	}
 }
 
@@ -109,7 +115,7 @@ size_t DeleteSpaces (char *array)
 	{
 		if (array[i] == '\n')
 		{
-			if(!is_newline && array[i + 1] != '\0')
+			if(!is_newline && array[i + 1] != '\n' && array[i + 1] != EOF)
 			{
 				array[j++] = array[i];
 				is_newline = true;
@@ -118,7 +124,6 @@ size_t DeleteSpaces (char *array)
 			else
 				continue;
 		}
-
 		else if (isspace(array[i]))
 		{
 			if (!is_space && !is_newline)
@@ -129,7 +134,7 @@ size_t DeleteSpaces (char *array)
 			else
 				continue;
 		}
-		else if (array[i] != '\0')
+		else
 		{
 			array[j++] = array[i];
 			is_newline = false;

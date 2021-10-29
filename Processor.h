@@ -5,18 +5,7 @@
 #include <limits.h>
 #include <ctype.h>
 
-// #define DEBUG //#ifndef #endif
-
 //-------- Stack variables ---------
-
-enum Stack_errors
-{
-	STK_IS_NULL_PTR  = 1,
-	STK_OVERFL       = 2,
-	STK_UNDERFL      = 3,
-	STK_DESTROYED    = 4,
-	DATA_IS_NULL_PTR = 5,
-};
 
 typedef int data_t;
 
@@ -34,7 +23,7 @@ typedef struct Stack_t
 
 enum File_errors
 {
-	WRONG_INPUT_FILE = 6,
+	CANT_OPEN_FILE = 1,
 };
 
 typedef struct String_t
@@ -51,6 +40,24 @@ typedef struct Text_t
 	size_t num_of_strings = 0;
 	String *strings = nullptr;
 } Text;
+
+//-------- Assembler variables --------
+
+typedef int data_t;
+
+enum Commands
+{
+	CMD_HLT	 = 0,
+	CMD_PUSH = 1,
+	CMD_POP  = 2,
+	CMD_ADD  = 3,
+	CMD_SUB  = 4,
+	CMD_MUL  = 5,
+	CMD_DIV  = 6,
+	CMD_OUT  = 7,
+};
+
+const int MAX_SIZE_OF_CODE = 300;
 
 //-------- Stack functions ---------
 
@@ -85,3 +92,9 @@ void MakeString (Text *text);
 size_t DeleteSpaces (char *array);
 
 void MemoryFree (Text *text);
+
+//-------- Asembler functions ---------
+
+size_t Assembler (Text* input, data_t* code);
+
+int MakeBinaryFile (data_t* code, int size_of_code);
