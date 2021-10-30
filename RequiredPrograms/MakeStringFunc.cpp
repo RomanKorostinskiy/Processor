@@ -2,9 +2,10 @@
 
 int GetFileNames (Text *text, int argc, char* argv[])
 {
-    if (argc == 2)
+    if (argc == 3)
     {
         text->input_file_name = argv[1];
+        text->output_file_name = argv[2];
 
         return 0;
     }

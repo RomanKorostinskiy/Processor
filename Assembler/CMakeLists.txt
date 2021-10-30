@@ -10,5 +10,5 @@ add_executable(Assembler
         src/Assembler.cpp
         src/AssemblerFunc.cpp
         ../RequiredPrograms/MakeStringFunc.cpp
-        ../GeneralInclude/Processor.h
+        ../GeneralInclude/General.h
         include/Assembler.h)

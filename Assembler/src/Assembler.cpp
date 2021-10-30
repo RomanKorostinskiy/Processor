@@ -20,7 +20,7 @@ int main(int argc, char* argv[])
 
 	size_t sizeof_code = Assembler(&input_text, code);
 
-	MakeBinaryFile (code, sizeof_code);
+	MakeBinaryFile (code, sizeof_code, input_text.output_file_name);
 
 	//---------------------------------
 	for (int i = 0; code[i] != 0; i++)

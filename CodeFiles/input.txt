@@ -1,23 +1,5 @@
 push 10
 push 20
 add
-push 10
-mul
-push 1
-push 12
-sub
-add
-push 2
-push 3
-add
-sub
-push 2
 out
 hlt
-
-
-
-
-
-
-

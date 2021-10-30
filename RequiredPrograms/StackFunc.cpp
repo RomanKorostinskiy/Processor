@@ -1,4 +1,4 @@
-#include "../include/Stack.h"
+#include "../include/Processor.h"
 
 const int    START_CAPACITY  = 1;
 const int    CAPACITY_STEP   = 2;
@@ -15,7 +15,7 @@ int StackCtor (Stack* stack, int* errors, int capacity)
     if (capacity <= 0)
         return 1;
     else
-        stack->capacity = capacity; //TODO проверка capacity +
+        stack->capacity = capacity;
 
 #ifdef CANARY_DEFF
     stack->data = (data_t*) calloc(stack->capacity * sizeof(data_t) + 2 * sizeof(canary_t), //TODO проверка возвращаемого значения calloc
@@ -25,13 +25,13 @@ int StackCtor (Stack* stack, int* errors, int capacity)
     stack->canary_right = CANARY_CONSTANT;
 
     *((canary_t*)stack->data) = CANARY_CONSTANT;
-    stack->data = (data_t*)((canary_t*)stack->data + 1); //TODO +
+    stack->data = (data_t*)((canary_t*)stack->data + 1);
     *(canary_t*)(stack->data + stack->capacity) = CANARY_CONSTANT;
 #else
     stack->data = (data_t*) calloc (stack->capacity, sizeof(data_t));
 #endif
 
-    assert(stack->data != nullptr); //TODO проверка calloc +
+    assert(stack->data != nullptr);
 
     stack->size = 0;
 
@@ -112,7 +112,7 @@ data_t StackPop (Stack* stack, int* errors)
 	return value;
 }
 
-data_t* StackResize (Stack* stack, int* errors) //TODO гестерезис +
+data_t* StackResize (Stack* stack, int* errors)
 {
     STACK_RESIZE_ERROR_CHECK();
 
@@ -134,7 +134,7 @@ data_t* StackResize (Stack* stack, int* errors) //TODO гестерезис +
         ((canary_t*)new_adress)[0] = CANARY_CONSTANT;
 
         new_adress = (data_t*)((canary_t*)new_adress + 1);
-        memset (new_adress + stack->size, (int)0, (stack->capacity - stack->size) * sizeof(data_t));
+        //TODO
 
         *(canary_t*)(new_adress + stack->capacity) = CANARY_CONSTANT;
 #else
@@ -157,7 +157,7 @@ data_t* StackResize (Stack* stack, int* errors) //TODO гестерезис +
         ((canary_t*)new_adress)[0] = CANARY_CONSTANT;
 
         new_adress = (data_t*)((canary_t*)new_adress + 1);
-        memset (new_adress + stack->size, (int)0, (stack->capacity - stack->size) * sizeof(data_t));
+        //TODO
 
         *(canary_t*)(new_adress + stack->capacity) = CANARY_CONSTANT;
 #else
@@ -166,7 +166,10 @@ data_t* StackResize (Stack* stack, int* errors) //TODO гестерезис +
 #endif
     }
 
-    if (!new_adress) //TODO проверка возвращаемого значения realloc +
+    memset (new_adress + stack->size, (int)0,
+            (stack->capacity - stack->size) * sizeof(data_t));
+
+    if (!new_adress)
         return stack->data;
     else
 	    return new_adress;

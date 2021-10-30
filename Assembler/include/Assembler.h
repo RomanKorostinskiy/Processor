@@ -1,4 +1,7 @@
-#include "../GeneralInclude/Processor.h"
+#pragma once
+
+#include "../GeneralInclude/General.h"
+
 
 //-------- Onegin variables --------
 
@@ -21,6 +24,18 @@ typedef struct Text_t
     size_t num_of_strings = 0;
     String *strings = nullptr;
 } Text;
+
+//-------- Assembler variables --------
+
+const size_t CMD_SIZE = 5;
+
+enum Assembler_errors
+{
+    CANT_OPEN_FILE = 1,
+    WRONG_WRITE_TO_FILE = 2,
+};
+
+const int MAX_SIZE_OF_CODE = 1000; //TODO придумать как считать размер кода
 
 //--------- Onegin functions ---------
 
@@ -54,17 +69,8 @@ void OriginalSort (Text *text);
 
 int GetFileNames (Text *text, int argc, char* argv[]);
 
-//-------- Assembler variables --------
-
-enum Assembler_errors
-{
-    CANT_OPEN_FILE = 1,
-};
-
-const int MAX_SIZE_OF_CODE = 300;
-
 //-------- Assembler functions ---------
 
 size_t Assembler (Text* input, data_t* code);
 
-int MakeBinaryFile (data_t* code, int size_of_code);
+int MakeBinaryFile (data_t* code, int sizeof_code, const char* file_name);

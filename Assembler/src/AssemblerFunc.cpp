@@ -2,7 +2,7 @@
 
 size_t Assembler (Text* input, data_t* code)
 {
-	char command[5];
+	char command[CMD_SIZE];
 
 	data_t param = 0;
 
@@ -59,16 +59,23 @@ size_t Assembler (Text* input, data_t* code)
 	return num_of_commands;
 }
 
-int MakeBinaryFile (data_t* code, int sizeof_code)
+int MakeBinaryFile (data_t* code, int sizeof_code, const char* file_name)
 {
-	FILE* output = nullptr;
+	FILE* file_ptr = nullptr;
 
-	output = fopen("code.bin", "wb");
+	file_ptr = fopen(file_name, "wb");
 
-	if (output == nullptr)
-		return CANT_OPEN_FILE;
+	if (file_ptr == nullptr)
+    {
+        printf("In Function MakeBinaryFile: Can't open file");
+        return CANT_OPEN_FILE;
+    }
 
-	fwrite(code, sizeof(data_t), sizeof_code, output);
+	if (fwrite(code, sizeof(data_t), sizeof_code, file_ptr) != sizeof_code)
+    {
+        printf("In Function MakeBinaryFile: Wrong write of code");
+        return WRONG_WRITE_TO_FILE;
+    }
 
 	return 0;
 }
