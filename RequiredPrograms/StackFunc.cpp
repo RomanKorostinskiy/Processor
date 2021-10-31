@@ -5,10 +5,12 @@ const int    CAPACITY_STEP   = 2;
 const size_t CANARY_CONSTANT = 0xB00BA555;
 const data_t*   UNAVAILABLE_ADR = (data_t*) 1;
 
+int errors = 0;
+
 #define CANARY_DEFF
 #define HASH_DEFF
 
-int StackCtor (Stack* stack, int* errors, int capacity)
+int StackCtor (Stack* stack, int capacity)
 {
 	STACK_CTOR_CHECK();
 
@@ -44,7 +46,7 @@ int StackCtor (Stack* stack, int* errors, int capacity)
 	return 0;
 }
 
-int StackDtor (Stack* stack, int* errors)
+int StackDtor (Stack* stack)
 {
     STACK_DTOR_ERROR_CHECK();
 
@@ -68,13 +70,13 @@ int StackDtor (Stack* stack, int* errors)
 	return 0;
 }
 
-int StackPush (Stack* stack, data_t value, int* errors)
+int StackPush (Stack* stack, data_t value)
 {
     STACK_ERROR_CHECK();
 
     if (stack->size == stack->capacity)
     {
-        stack->data = StackResize(stack, errors);
+        stack->data = StackResize(stack);
     }
 
     stack->data[stack->size++] = value;
@@ -88,7 +90,7 @@ int StackPush (Stack* stack, data_t value, int* errors)
 	return 0;
 }
 
-data_t StackPop (Stack* stack, int* errors)
+data_t StackPop (Stack* stack)
 {
     STACK_POP_ERROR_CHECK();
 
@@ -96,7 +98,7 @@ data_t StackPop (Stack* stack, int* errors)
 	
 	if (stack->size * 2 * CAPACITY_STEP == stack->capacity)
 	{
-		stack->data = StackResize(stack, errors);
+		stack->data = StackResize(stack);
 	}
 
 	value = stack->data[--stack->size];
@@ -112,7 +114,7 @@ data_t StackPop (Stack* stack, int* errors)
 	return value;
 }
 
-data_t* StackResize (Stack* stack, int* errors)
+data_t* StackResize (Stack* stack)
 {
     STACK_RESIZE_ERROR_CHECK();
 
@@ -196,76 +198,76 @@ size_t StackHash (Stack* stack)
     return hash;
 }
 
-int StackErrorCheck (Stack* stack, int* errors)
+int StackErrorCheck (Stack* stack)
 {
 	if (stack == nullptr)
-		*errors |= STK_IS_NULL_PTR;
+		errors |= STK_IS_NULL_PTR;
 
 	if (stack->data == nullptr)
-		*errors |= DATA_IS_NULL_PTR;
+		errors |= DATA_IS_NULL_PTR;
 
 	if (stack->data == UNAVAILABLE_ADR)
-		*errors |= STK_DESTROYED;
+		errors |= STK_DESTROYED;
 
-    if ((*errors & STK_IS_NULL_PTR)  == STK_IS_NULL_PTR ||
-        (*errors & DATA_IS_NULL_PTR) == DATA_IS_NULL_PTR ||
-        (*errors & STK_DESTROYED)    == STK_DESTROYED)
-        return *errors;
+    if ((errors & STK_IS_NULL_PTR)  == STK_IS_NULL_PTR ||
+        (errors & DATA_IS_NULL_PTR) == DATA_IS_NULL_PTR ||
+        (errors & STK_DESTROYED)    == STK_DESTROYED)
+        return errors;
 
 	if (stack->size < 0)
-		*errors |= STK_UNDERFL;
+		errors |= STK_UNDERFL;
 
 	if (stack->size > stack->capacity)
-		*errors |= STK_OVERFL;
+		errors |= STK_OVERFL;
 
 #ifdef HASH_DEFF
     if (stack->hash != StackHash(stack))
-        *errors |= HASH_BAD;
+        errors |= HASH_BAD;
 #endif
 
 #ifdef CANARY_DEFF
     if (stack->canary_left != CANARY_CONSTANT || stack->canary_right != CANARY_CONSTANT)
-        *errors |= STRCT_CANARY_BAD;
+        errors |= STRCT_CANARY_BAD;
 
     if (((canary_t*)stack->data)[-1] != CANARY_CONSTANT ||
     *(canary_t*)(stack->data + stack->capacity) != CANARY_CONSTANT)
-        *errors |= DATA_CANARY_BAD;
+        errors |= DATA_CANARY_BAD;
 #endif
 
-    return *errors;
+    return errors;
 }
 
-int StackCtorCheck (Stack* stack, int* errors)
+int StackCtorCheck (Stack* stack)
 {
 	if (stack->data != nullptr && stack->data != UNAVAILABLE_ADR)
 	{
-		*errors |= STK_DOUBLE_CTED;
-		return *errors;
+		errors |= STK_DOUBLE_CTED;
+		return errors;
 	}
 	else
 		return 0;
 }
 
-int StackDtorCheck (Stack* stack, int* errors)
+int StackDtorCheck (Stack* stack)
 {
     if (stack == nullptr)
-        *errors |= STK_IS_NULL_PTR;
+        errors |= STK_IS_NULL_PTR;
 
     if (stack->data == nullptr)
-        *errors |= DATA_IS_NULL_PTR;
+        errors |= DATA_IS_NULL_PTR;
 
     if (stack->data == UNAVAILABLE_ADR)
-        *errors |= STK_DESTROYED;
+        errors |= STK_DESTROYED;
 
-    if ((*errors & STK_DESTROYED) == STK_DESTROYED)
-        return *errors;
+    if ((errors & STK_DESTROYED) == STK_DESTROYED)
+        return errors;
 
-    return *errors;
+    return errors;
 }
 
-void StackDump (Stack* stack, int errors, const char* current_file, const char* current_function)
+void StackDump (Stack* stack, const char* current_file, const char* current_function)
 {
-	FILE* dump_file = fopen("../test/Dump.txt", "a"); //TODO передавать pid в имя файла
+	FILE* dump_file = fopen("../StackLog/Dump.txt", "a"); //TODO передавать pid в имя файла
 
     if (errors != 0)
     {
@@ -322,7 +324,7 @@ void StackDump (Stack* stack, int errors, const char* current_file, const char* 
 
     if ((errors & HASH_BAD) == HASH_BAD)
     {
-        fprintf(dump_file, "\n-In file: %s; In function: %s\n Data hash has been changed illegally. Error code: %d\n",
+        fprintf(dump_file, "\n-In file: %s; In function: %s\n Stack hash has been changed illegally. Error code: %d\n",
                 current_file, current_function, errors & HASH_BAD);
     }
 

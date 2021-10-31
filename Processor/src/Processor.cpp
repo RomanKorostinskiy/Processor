@@ -2,11 +2,10 @@
 
 int main(int argc, char* argv[])
 {
-	Stack stack = {};
+	Processor_t processor = {};
+    StackCtor(&processor.stack);
 
-	data_t* code = nullptr;
     char* code_file_name = nullptr;
-    size_t sizeof_code = 0;
 
     if (GetFileNames(&code_file_name, argc, argv) == 1)
     {
@@ -14,17 +13,20 @@ int main(int argc, char* argv[])
         return 1;
     }
 
-    sizeof_code = GetCode (&code, code_file_name);
+    processor.sizeof_code = GetCode (&processor.code, code_file_name);
 
-    for (int i = 0; code[i] != 0; i++)
+    for (int i = 0; i < processor.sizeof_code; i++)
     {
-        printf("\n%d", code[i]);
+        printf("\n%d", processor.code[i]);
     }
 
-    printf("\nsizeof code = %ld", sizeof_code);
+    printf("\nsizeof code = %ld\n", processor.sizeof_code);
 
-//    Processor (code);
-    free (code);
+    Processor (&processor);
+
+    StackDtor(&processor.stack);
+    free (processor.code);
+
 
 	return 0;
 }

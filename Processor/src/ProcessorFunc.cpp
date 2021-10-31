@@ -30,7 +30,12 @@ size_t GetSizeOfFile (FILE* fp)
 size_t GetCode (data_t** code, const char* file_name)
 {
     FILE* file_ptr = nullptr;
-    file_ptr = fopen(file_name, "rb");
+
+    if ((file_ptr = fopen(file_name, "rb")) == nullptr)
+    {
+        printf("In Function GetCode: Can't open file");
+        return CANT_OPEN_FILE;
+    }
 
     size_t sizeof_code = GetSizeOfFile (file_ptr) / sizeof(data_t);
     *code = (data_t*) calloc(sizeof_code, sizeof(data_t));
@@ -41,56 +46,76 @@ size_t GetCode (data_t** code, const char* file_name)
         return CANT_READ_FROM_FILE;
     }
 
+    fclose(file_ptr);
+
     return sizeof_code;
 }
 
-//data_t Processor (Stack* stack, Text* input)
-//{
-//    data_t param;
-//
-//    // for (size_t i = 0; i < input->num_of_strings; i++)
-//    // {
-//    // 	sscanf(input->strings[i].ptr, "%s %d", command, &param);
-//
-//    // 	//push
-//    // 	if(strcmp("push", command) == 0)
-//    // 	{
-//    // 		StackPush(stack, param);
-//
-//    // 		printf("\npush: %d\n", stack->data[stack->size - 1]);
-//    // 	}
-//    // 	//pop
-//    // 	if(strcmp("pop", command) == 0)
-//    // 	{
-//    // 		StackPop(stack);
-//    // 	}
-//    // 	//add
-//    // 	if(strcmp("add", command) == 0)
-//    // 	{
-//    // 		StackPush(stack, StackPop(stack) + StackPop(stack));
-//
-//    // 		printf("\nadd: %d\n", stack->data[stack->size - 1]);
-//    // 	}
-//    // 	//sub
-//    // 	if(strcmp("sub", command) == 0)
-//    // 	{
-//    // 		StackPush(stack, (-1)*(StackPop(stack) - StackPop(stack))); //TODO проблемка с порядком вычетания: StackPush(stack, (-1)*(StackPop(stack) - StackPop(stack)));
-//
-//    // 		printf("\nsub: %d\n", stack->data[stack->size - 1]);
-//    // 	}
-//    // 	//mul
-//    // 	if(strcmp("mul", command) == 0)
-//    // 	{
-//    // 		StackPush(stack, StackPop(stack) * StackPop(stack));
-//
-//    // 		printf("\nmul: %d\n", stack->data[stack->size - 1]);
-//    // 	}
-//    // 	//out
-//    // 	if(strcmp("out", command) == 0)
-//    // 	{
-//    // 		return StackPop(stack);
-//    // 	}
-//    // }
-//
-//    return 0;
-//}
+int Processor (Processor_t* processor)
+{
+    while(processor->ip < processor->sizeof_code)
+    {
+        int pop1 = 0;
+        int pop2 = 0;
+        switch (processor->code[processor->ip])
+        {
+            case CMD_PUSH:
+                StackPush (&processor->stack, processor->code[++processor->ip]);
+                processor->ip++;
+                break;
+
+            case CMD_POP:
+                StackPop(&processor->stack); //TODO регистры
+                processor->ip++;
+                break;
+
+            case CMD_ADD:
+                StackPush(&processor->stack,
+                          StackPop(&processor->stack) + StackPop(&processor->stack));
+                processor->ip++;
+                break;
+
+            case CMD_SUB:
+                pop1 = StackPop(&processor->stack);
+                pop2 = StackPop(&processor->stack);
+
+                StackPush(&processor->stack, pop2 - pop1);
+                processor->ip++;
+                break;
+
+            case CMD_MUL:
+                StackPush(&processor->stack,
+                          StackPop(&processor->stack) * StackPop(&processor->stack));
+                processor->ip++;
+                break;
+
+            case CMD_DIV:
+                pop1 = StackPop(&processor->stack);
+                pop2 = StackPop(&processor->stack);
+
+                if (pop1 == 0)
+                {
+                    printf("Сan't divide by zero");
+                    return WRONG_DATA;
+                }
+
+                StackPush(&processor->stack, pop2 / pop1);
+                processor->ip++;
+                break;
+
+            case CMD_OUT:
+                printf("\n%d\n", StackPop(&processor->stack));
+                processor->ip++;
+                break;
+
+            case CMD_HLT:
+                return 0;
+
+            default:
+                printf("In Function Processor: Default case is reached");
+                return PROCESSOR_DEFAULT_CASE;
+        }
+    }
+    printf("In Function Processor: Default case is reached");
+    return PROCESSOR_DEFAULT_CASE;
+}
