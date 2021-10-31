@@ -71,6 +71,6 @@ int GetFileNames (Text *text, int argc, char* argv[]);
 
 //-------- Assembler functions ---------
 
-size_t Assembler (Text* input, data_t* code);
+size_t Assembler (Text* input, void* code);
 
-int MakeBinaryFile (data_t* code, int sizeof_code, const char* file_name);
+int MakeBinaryFile (void* code, int sizeof_code, const char* file_name);

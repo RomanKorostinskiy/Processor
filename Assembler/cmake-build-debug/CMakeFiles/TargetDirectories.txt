@@ -1,0 +1,3 @@
+/home/roman/CS/C/Huawei/Processor/Assembler/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/home/roman/CS/C/Huawei/Processor/Assembler/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/roman/CS/C/Huawei/Processor/Assembler/cmake-build-debug/CMakeFiles/Assembler.dir

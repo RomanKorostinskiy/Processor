@@ -10,9 +10,9 @@ int main(int argc, char* argv[])
         return 1;
     }
 
-	data_t* code = nullptr;
+	void* code = nullptr;
 
-	code = (data_t*) calloc(MAX_SIZE_OF_CODE, sizeof(data_t));
+	code = (void*) calloc(MAX_SIZE_OF_CODE, sizeof(char));
 
 	ReadFromFile(&input_text);
 
@@ -20,15 +20,9 @@ int main(int argc, char* argv[])
 
 	size_t sizeof_code = Assembler(&input_text, code);
 
-	MakeBinaryFile (code, sizeof_code, input_text.output_file_name);
+    printf("%ld", sizeof_code);
 
-	//---------------------------------
-	for (int i = 0; code[i] != 0; i++)
-	{
-		printf("\n%d", code[i]);
-	}
-	printf("\nsizeof code = %ld\n", sizeof_code);
-	//---------------------------------
+	MakeBinaryFile (code, sizeof_code, input_text.output_file_name);
 
 	MemoryFree(&input_text);
 	free(code);

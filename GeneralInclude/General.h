@@ -27,4 +27,20 @@ enum Commands
 	CMD_MUL  = 5,
 	CMD_DIV  = 6,
 	CMD_OUT  = 7,
+    CMD_IN   = 8,
+};
+
+enum Arguments
+{
+    ARG_CONS = 32,
+    ARG_REG   = 64,
+};
+
+enum Registers
+{
+    AX = 1,
+    BX = 2,
+    CX = 3,
+    DX = 4,
+
 };

@@ -13,11 +13,11 @@ int main(int argc, char* argv[])
         return 1;
     }
 
-    processor.sizeof_code = GetCode (&processor.code, code_file_name);
+    GetCode (&processor, code_file_name);
 
     for (int i = 0; i < processor.sizeof_code; i++)
     {
-        printf("\n%d", processor.code[i]);
+        printf("\n%d", *(char*)(processor.code + i));
     }
 
     printf("\nsizeof code = %ld\n", processor.sizeof_code);

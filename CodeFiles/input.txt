@@ -1,5 +1,5 @@
-push 10
-push 20
-sub
+in
+in
+mul
 out
 hlt

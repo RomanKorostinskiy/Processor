@@ -27,7 +27,7 @@ size_t GetSizeOfFile (FILE* fp)
     return size_of_file;
 }
 
-size_t GetCode (data_t** code, const char* file_name)
+int GetCode (Processor_t* processor, const char* file_name)
 {
     FILE* file_ptr = nullptr;
 
@@ -37,10 +37,10 @@ size_t GetCode (data_t** code, const char* file_name)
         return CANT_OPEN_FILE;
     }
 
-    size_t sizeof_code = GetSizeOfFile (file_ptr) / sizeof(data_t);
-    *code = (data_t*) calloc(sizeof_code, sizeof(data_t));
+    processor->sizeof_code = GetSizeOfFile (file_ptr);
+    processor->code = (void*) calloc(processor->sizeof_code, sizeof(char*));
 
-    if (fread (*code, sizeof(data_t), sizeof_code, file_ptr) != sizeof_code)
+    if (fread (processor->code, sizeof(char), processor->sizeof_code, file_ptr) != processor->sizeof_code)
     {
         printf("In Function GetCode: Can't read code from file");
         return CANT_READ_FROM_FILE;
@@ -48,64 +48,72 @@ size_t GetCode (data_t** code, const char* file_name)
 
     fclose(file_ptr);
 
-    return sizeof_code;
+    return 0;
 }
 
 int Processor (Processor_t* processor)
 {
     while(processor->ip < processor->sizeof_code)
     {
-        int pop1 = 0;
-        int pop2 = 0;
-        switch (processor->code[processor->ip])
+        int var1 = 0;
+        int var2 = 0;
+        switch (*((char*)processor->code + processor->ip))
         {
             case CMD_PUSH:
-                StackPush (&processor->stack, processor->code[++processor->ip]);
-                processor->ip++;
+                StackPush (&processor->stack,
+                           *(int*)((char*)processor->code + processor->ip + sizeof(char)));
+                processor->ip += sizeof(char);
+                processor->ip += sizeof(int);
                 break;
 
             case CMD_POP:
                 StackPop(&processor->stack); //TODO регистры
-                processor->ip++;
+                processor->ip += sizeof(char);
                 break;
 
             case CMD_ADD:
                 StackPush(&processor->stack,
                           StackPop(&processor->stack) + StackPop(&processor->stack));
-                processor->ip++;
+                processor->ip += sizeof(char);
                 break;
 
             case CMD_SUB:
-                pop1 = StackPop(&processor->stack);
-                pop2 = StackPop(&processor->stack);
+                var1 = StackPop(&processor->stack);
+                var2 = StackPop(&processor->stack);
 
-                StackPush(&processor->stack, pop2 - pop1);
-                processor->ip++;
+                StackPush(&processor->stack, var2 - var1);
+                processor->ip += sizeof(char);
                 break;
 
             case CMD_MUL:
                 StackPush(&processor->stack,
                           StackPop(&processor->stack) * StackPop(&processor->stack));
-                processor->ip++;
+                processor->ip += sizeof(char);
                 break;
 
             case CMD_DIV:
-                pop1 = StackPop(&processor->stack);
-                pop2 = StackPop(&processor->stack);
+                var1 = StackPop(&processor->stack);
+                var2 = StackPop(&processor->stack);
 
-                if (pop1 == 0)
+                if (var1 == 0)
                 {
                     printf("Сan't divide by zero");
                     return WRONG_DATA;
                 }
 
-                StackPush(&processor->stack, pop2 / pop1);
-                processor->ip++;
+                StackPush(&processor->stack, var2 / var1);
+                processor->ip += sizeof(char);
                 break;
 
             case CMD_OUT:
                 printf("\n%d\n", StackPop(&processor->stack));
-                processor->ip++;
+                processor->ip += sizeof(char);
+                break;
+
+            case CMD_IN:
+                scanf("%d", &var1);
+                StackPush(&processor->stack, var1);
+                processor->ip += sizeof(char);
                 break;
 
             case CMD_HLT:

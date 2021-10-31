@@ -1,0 +1,1 @@
+/usr/bin/c++ -g CMakeFiles/Processor.dir/src/Processor.cpp.o CMakeFiles/Processor.dir/src/ProcessorFunc.cpp.o CMakeFiles/Processor.dir/home/roman/CS/C/Huawei/Processor/RequiredPrograms/StackFunc.cpp.o -o Processor 

@@ -62,7 +62,12 @@ typedef struct Processor_t
 {
     Stack stack = {};
 
-    data_t * code = nullptr;
+    int ax = 0;
+    int bx = 0;
+    int cx = 0;
+    int dx = 0;
+
+    void* code = nullptr;
     int ip = 0;
     size_t sizeof_code = 0;
 }Processor_t;
@@ -193,6 +198,6 @@ int GetFileNames (char** file_name, int argc, char* argv[]);
 
 size_t GetSizeOfFile (FILE* fp);
 
-size_t GetCode (data_t** code, const char* file_name);
+int GetCode (Processor_t* processor, const char* file_name);
 
 int Processor (Processor_t* processor);
