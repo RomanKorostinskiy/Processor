@@ -38,9 +38,10 @@ enum Arguments
 
 enum Registers
 {
-    AX = 1,
-    BX = 2,
-    CX = 3,
-    DX = 4,
-
+    AX = 0,
+    BX = 1,
+    CX = 2,
+    DX = 3,
 };
+
+//const size_t RAM_SIZE = 1024;

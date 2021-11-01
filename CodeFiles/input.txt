@@ -1,15 +1,7 @@
-push ax
-push bx
 push 5
-push 7
-push 5 + cx
-push 3 + dx
-pop ax
-pop cx
+push 5
 add
-sub
-mul
-div
-in
+pop ax
+push 3 + ax
 out
 hlt

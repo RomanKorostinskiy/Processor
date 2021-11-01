@@ -1,0 +1,30 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/roman/CS/C/Huawei/Processor/CommandsTable/table.cpp
+stdio.h
+-
+stdlib.h
+-
+../GeneralInclude/General.h
+/home/roman/CS/C/Huawei/Processor/GeneralInclude/General.h
+
+/home/roman/CS/C/Huawei/Processor/GeneralInclude/General.h
+stdio.h
+-
+stdlib.h
+-
+string.h
+-
+assert.h
+-
+limits.h
+-
+ctype.h
+-
+

@@ -17,7 +17,7 @@ int main(int argc, char* argv[])
 
     for (int i = 0; i < processor.sizeof_code; i++)
     {
-        printf("\n%d", *(char*)(processor.code + i));
+        printf("\n%x", *((char*)processor.code + i));
     }
 
     printf("\nsizeof code = %ld\n", processor.sizeof_code);

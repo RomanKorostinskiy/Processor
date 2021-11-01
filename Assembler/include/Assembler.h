@@ -34,7 +34,7 @@ enum Assembler_errors
     CANT_OPEN_FILE      = 1,
     WRONG_WRITE_TO_FILE = 2,
     PUSH_ARGS_ERROR     = 3,
-    WRONG_REGISTER      = 0,
+    WRONG_REGISTER      = 4,
     SYNTAX_ERROR        = 5,
 };
 

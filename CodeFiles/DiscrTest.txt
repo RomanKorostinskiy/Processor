@@ -1,0 +1,17 @@
+in
+pop ax
+in
+pop bx
+in
+pop cx
+push bx
+push bx
+mul
+push 4
+push ax
+push cx
+mul
+mul
+sub
+out
+hlt

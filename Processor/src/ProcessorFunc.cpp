@@ -57,18 +57,39 @@ int Processor (Processor_t* processor)
     {
         int var1 = 0;
         int var2 = 0;
-        switch (*((char*)processor->code + processor->ip))
+        int arg = 0;
+
+        int cmd = *((char*)processor->code + processor->ip) & 0x1F;
+        int type = *((char*)processor->code + processor->ip) & 0xE0;
+
+        switch (cmd)
         {
             case CMD_PUSH:
-                StackPush (&processor->stack,
-                           *(int*)((char*)processor->code + processor->ip + sizeof(char)));
                 processor->ip += sizeof(char);
-                processor->ip += sizeof(int);
+
+                if((type & ARG_CONS) != 0)
+                {
+                    arg += *(int*)((char*)processor->code + processor->ip);
+                    processor->ip += sizeof(int);
+                }
+                if((type & ARG_REG) != 0)
+                {
+                    arg += processor->REGS[*(char*)((char*)processor->code + processor->ip)];
+                    processor->ip += sizeof(char);
+                }
+
+                StackPush (&processor->stack, arg);
                 break;
 
             case CMD_POP:
-                StackPop(&processor->stack); //TODO регистры
                 processor->ip += sizeof(char);
+
+                if((type & ARG_REG) != 0)
+                {
+                    processor->REGS[*(char*)((char*)processor->code + processor->ip)] = StackPop(&processor->stack);
+                    processor->ip += sizeof(char);
+                }
+
                 break;
 
             case CMD_ADD:

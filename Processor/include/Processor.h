@@ -38,10 +38,10 @@ typedef size_t canary_t;
 typedef size_t hash_t;
 
 
-extern const int    START_CAPACITY;
-extern const int    CAPACITY_STEP;
-extern const size_t CANARY_CONSTANT;
-extern const data_t*   UNAVAILABLE_ADR;
+extern const int     START_CAPACITY;
+extern const int     CAPACITY_STEP;
+extern const size_t  CANARY_CONSTANT;
+extern const data_t* UNAVAILABLE_ADR;
 
 typedef struct Stack_t
 {
@@ -62,10 +62,9 @@ typedef struct Processor_t
 {
     Stack stack = {};
 
-    int ax = 0;
-    int bx = 0;
-    int cx = 0;
-    int dx = 0;
+    data_t REGS[4] = {0};
+
+//    data_t RAM[RAM_SIZE] = {0};
 
     void* code = nullptr;
     int ip = 0;
