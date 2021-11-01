@@ -1,5 +1,15 @@
-in
-in
+push ax
+push bx
+push 5
+push 7
+push 5 + cx
+push 3 + dx
+pop ax
+pop cx
+add
+sub
 mul
+div
+in
 out
 hlt

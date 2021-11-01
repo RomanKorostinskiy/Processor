@@ -1,83 +1,166 @@
 #include "../include/Assembler.h"
 
+char SwitchReg (char reg)
+{
+    switch (reg)
+    {
+        case 'a':
+            return AX;
+        case 'b':
+            return BX;
+        case 'c':
+            return CX;
+        case 'd':
+            return DX;
+        default:
+            return WRONG_REGISTER;
+    }
+}
+
 size_t Assembler (Text* input, void* code)
 {
-	char command[CMD_SIZE];
+	char command[CMD_SIZE] = {0};
 
-	data_t cons = 0;
-//    char reg = 0;
-//    int scan = 0;
-
-	int num_of_commands = 0;
+    int num_of_commands = 0;
 
 	for (size_t i = 0; i < input->num_of_strings; i++)
 	{
-//        scan = sscanf(input->strings[i].ptr, "%s %d%c", command, &cons, &reg);
-        sscanf(input->strings[i].ptr, "%s %d", command, &cons);
+        data_t cons = 0;
+        char reg = 0;
+
+        int scan_ok = 0;
+        int scan_case = 0;
+
+        if (sscanf(input->strings[i].ptr, "%s %d + %cx%n", command, &cons, &reg, &scan_ok) == 3
+            && scan_ok)
+            scan_case = 1;
+        else if(sscanf(input->strings[i].ptr, "%s %cx%n", command, &reg, &scan_ok) == 2
+                && scan_ok)
+            scan_case = 2;
+        else if(sscanf(input->strings[i].ptr, "%s %d%n", command, &cons, &scan_ok) == 2
+                && scan_ok)
+            scan_case = 3;
+        else if(sscanf(input->strings[i].ptr, "%s%n", command, &scan_ok) == 1
+                && scan_ok)
+            scan_case = 0;
+        else
+        {
+            printf("In Function Assembler: Unknown command format at line %ld", i + 1);
+            return SYNTAX_ERROR;
+        }
 		//push
 		if(strcmp("push", command) == 0)
 		{
-//            if (scan == 2)
-//            {
-//                if(reg != 0)
-//                {
-//                    *((char*)code + num_of_commands) = (char) (CMD_PUSH | ARG_REG);
-//                }
-//            }
-            *((char*)code + num_of_commands) = (char) CMD_PUSH;
-            num_of_commands += sizeof(char);
+            if (scan_case == 1)
+            {
+                *((char*)code + num_of_commands) = (char) (CMD_PUSH | ARG_REG | ARG_CONS);
+                num_of_commands += sizeof(char);
 
-            *(int*)((char*)code + num_of_commands) = cons;
-            num_of_commands += sizeof(int);
-		}
+                *(int*)((char*)code + num_of_commands) = cons;
+                num_of_commands += sizeof(int);
+
+                if (SwitchReg(reg) == WRONG_REGISTER)
+                {
+                    printf("In Function Assembler: Wrong register at line %ld", i + 1);
+                    return WRONG_REGISTER;
+                }
+
+                *((char *) code + num_of_commands) = SwitchReg(reg);
+                num_of_commands += sizeof(char);
+            }
+            else if (scan_case == 2)
+            {
+                *((char *) code + num_of_commands) = (char) (CMD_PUSH | ARG_REG);
+                num_of_commands += sizeof(char);
+
+                if (SwitchReg(reg) == WRONG_REGISTER)
+                {
+                    printf("In Function Assembler: Wrong register at line %ld", i + 1);
+                    return WRONG_REGISTER;
+                }
+
+                *((char *) code + num_of_commands) = SwitchReg(reg);
+                num_of_commands += sizeof(char);
+            }
+            else if (scan_case == 3)
+            {
+                *((char *) code + num_of_commands) = (char) (CMD_PUSH | ARG_CONS);
+                num_of_commands += sizeof(char);
+
+                *(int*)((char*)code + num_of_commands) = cons;
+                num_of_commands += sizeof(int);
+            }
+            else
+            {
+                printf("In Function Assembler: No push arguments at line %ld", i + 1);
+                return PUSH_ARGS_ERROR;
+            }
+        }
 		//pop
-		if(strcmp("pop", command) == 0)
+		else if(strcmp("pop", command) == 0)
 		{
-            *((char*)code + num_of_commands) = (char)CMD_POP;
-            num_of_commands += sizeof(char);
+            if (scan_case == 2)
+            {
+                *((char *) code + num_of_commands) = (char) CMD_POP | ARG_REG;
+                num_of_commands += sizeof(char);
+
+                if (SwitchReg(reg) == WRONG_REGISTER)
+                {
+                    printf("In Function Assembler: Wrong register at line %ld", i + 1);
+                    return WRONG_REGISTER;
+                }
+
+                *((char *) code + num_of_commands) = SwitchReg(reg);
+                num_of_commands += sizeof(char);
+            }
 		}
 		//add
-		if(strcmp("add", command) == 0)
+		else if(strcmp("add", command) == 0)
 		{
             *((char*)code + num_of_commands) = (char)CMD_ADD;
             num_of_commands += sizeof(char);
 		}
 		//sub
-		if(strcmp("sub", command) == 0)
+		else if(strcmp("sub", command) == 0)
 		{
             *((char*)code + num_of_commands) = (char)CMD_SUB;
             num_of_commands += sizeof(char);
 		}
 		//mul
-		if(strcmp("mul", command) == 0)
+		else if(strcmp("mul", command) == 0)
 		{
             *((char*)code + num_of_commands) = (char)CMD_MUL;
             num_of_commands += sizeof(char);
 		}
 		//div
-		if(strcmp("div", command) == 0)
+		else if(strcmp("div", command) == 0)
 		{
             *((char*)code + num_of_commands) = (char)CMD_DIV;
             num_of_commands += sizeof(char);
 		}
 		//out
-		if(strcmp("out", command) == 0)
+		else if(strcmp("out", command) == 0)
 		{
             *((char*)code + num_of_commands) = (char)CMD_OUT;
             num_of_commands += sizeof(char);
 		}
         //in
-        if(strcmp("in", command) == 0)
+        else if(strcmp("in", command) == 0)
         {
             *((char*)code + num_of_commands) = (char)CMD_IN;
             num_of_commands += sizeof(char);
         }
 		//hlt
-		if(strcmp("hlt", command) == 0)
-		{
+        else if (strcmp("hlt", command) == 0)
+        {
             *((char*)code + num_of_commands) = (char)CMD_HLT;
             num_of_commands += sizeof(char);
-		}
+        }
+		else
+        {
+            printf("In Function Assembler: Unknown command name at line %ld", i + 1);
+            return SYNTAX_ERROR;
+        }
 	}
 
 	return num_of_commands;

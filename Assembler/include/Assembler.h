@@ -27,12 +27,15 @@ typedef struct Text_t
 
 //-------- Assembler variables --------
 
-const size_t CMD_SIZE = 5;
+const size_t CMD_SIZE = 4;
 
 enum Assembler_errors
 {
-    CANT_OPEN_FILE = 1,
+    CANT_OPEN_FILE      = 1,
     WRONG_WRITE_TO_FILE = 2,
+    PUSH_ARGS_ERROR     = 3,
+    WRONG_REGISTER      = 0,
+    SYNTAX_ERROR        = 5,
 };
 
 const int MAX_SIZE_OF_CODE = 1000; //TODO придумать как считать размер кода
@@ -70,6 +73,8 @@ void OriginalSort (Text *text);
 int GetFileNames (Text *text, int argc, char* argv[]);
 
 //-------- Assembler functions ---------
+
+char SwitchReg (char reg);
 
 size_t Assembler (Text* input, void* code);
 
