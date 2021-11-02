@@ -29,6 +29,17 @@ typedef struct Text_t
 
 const size_t CMD_SIZE = 4;
 
+enum ScanCases
+{
+    CONS_REG_ADR = 1,
+    CONS_REG     = 2,
+    REG_ADR      = 3,
+    REG          = 4,
+    CONS_ADR     = 5,
+    CONS         = 6,
+    NO_ARGS      = 0,
+};
+
 enum Assembler_errors
 {
     CANT_OPEN_FILE      = 1,

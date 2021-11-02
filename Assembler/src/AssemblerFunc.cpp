@@ -31,18 +31,27 @@ size_t Assembler (Text* input, void* code)
         int scan_ok = 0;
         int scan_case = 0;
 
-        if (sscanf(input->strings[i].ptr, "%s %d + %cx%n", command, &cons, &reg, &scan_ok) == 3
+        if (sscanf(input->strings[i].ptr, "%s [%d + %cx%n]", command, &cons, &reg, &scan_ok) == 3
             && scan_ok)
-            scan_case = 1;
+            scan_case = CONS_REG_ADR;
+        else if (sscanf(input->strings[i].ptr, "%s %d + %cx%n", command, &cons, &reg, &scan_ok) == 3
+            && scan_ok)
+            scan_case = CONS_REG;
+        else if(sscanf(input->strings[i].ptr, "%s [%cx]%n", command, &reg, &scan_ok) == 2
+                && scan_ok)
+            scan_case = REG_ADR;
         else if(sscanf(input->strings[i].ptr, "%s %cx%n", command, &reg, &scan_ok) == 2
                 && scan_ok)
-            scan_case = 2;
+            scan_case = REG;
+        else if(sscanf(input->strings[i].ptr, "%s [%d]%n", command, &cons, &scan_ok) == 2
+                && scan_ok)
+            scan_case = CONS_ADR;
         else if(sscanf(input->strings[i].ptr, "%s %d%n", command, &cons, &scan_ok) == 2
                 && scan_ok)
-            scan_case = 3;
+            scan_case = CONS;
         else if(sscanf(input->strings[i].ptr, "%s%n", command, &scan_ok) == 1
                 && scan_ok)
-            scan_case = 0;
+            scan_case = NO_ARGS;
         else
         {
             printf("In Function Assembler: Unknown command format at line %ld", i + 1);
@@ -51,7 +60,24 @@ size_t Assembler (Text* input, void* code)
 		//push
 		if(strcmp("push", command) == 0)
 		{
-            if (scan_case == 1)
+            if (scan_case == CONS_REG_ADR)
+            {
+                *((char*)code + num_of_commands) = (char) (CMD_PUSH | ARG_REG | ARG_CONS | ARG_RAM);
+                num_of_commands += sizeof(char);
+
+                *(int*)((char*)code + num_of_commands) = cons;
+                num_of_commands += sizeof(int);
+
+                if (SwitchReg(reg) == WRONG_REGISTER)
+                {
+                    printf("In Function Assembler: Wrong register at line %ld", i + 1);
+                    return WRONG_REGISTER;
+                }
+
+                *((char *) code + num_of_commands) = SwitchReg(reg);
+                num_of_commands += sizeof(char);
+            }
+            else if (scan_case == CONS_REG)
             {
                 *((char*)code + num_of_commands) = (char) (CMD_PUSH | ARG_REG | ARG_CONS);
                 num_of_commands += sizeof(char);
@@ -68,7 +94,21 @@ size_t Assembler (Text* input, void* code)
                 *((char *) code + num_of_commands) = SwitchReg(reg);
                 num_of_commands += sizeof(char);
             }
-            else if (scan_case == 2)
+            else if (scan_case == REG_ADR)
+            {
+                *((char *) code + num_of_commands) = (char) (CMD_PUSH | ARG_REG | ARG_RAM);
+                num_of_commands += sizeof(char);
+
+                if (SwitchReg(reg) == WRONG_REGISTER)
+                {
+                    printf("In Function Assembler: Wrong register at line %ld", i + 1);
+                    return WRONG_REGISTER;
+                }
+
+                *((char *) code + num_of_commands) = SwitchReg(reg);
+                num_of_commands += sizeof(char);
+            }
+            else if (scan_case == REG)
             {
                 *((char *) code + num_of_commands) = (char) (CMD_PUSH | ARG_REG);
                 num_of_commands += sizeof(char);
@@ -82,7 +122,15 @@ size_t Assembler (Text* input, void* code)
                 *((char *) code + num_of_commands) = SwitchReg(reg);
                 num_of_commands += sizeof(char);
             }
-            else if (scan_case == 3)
+            else if (scan_case == CONS_ADR)
+            {
+                *((char *) code + num_of_commands) = (char) (CMD_PUSH | ARG_CONS | ARG_RAM);
+                num_of_commands += sizeof(char);
+
+                *(int*)((char*)code + num_of_commands) = cons;
+                num_of_commands += sizeof(int);
+            }
+            else if (scan_case == CONS)
             {
                 *((char *) code + num_of_commands) = (char) (CMD_PUSH | ARG_CONS);
                 num_of_commands += sizeof(char);
@@ -99,9 +147,26 @@ size_t Assembler (Text* input, void* code)
 		//pop
 		else if(strcmp("pop", command) == 0)
 		{
-            if (scan_case == 2)
+            if (scan_case == CONS_REG_ADR)
             {
-                *((char *) code + num_of_commands) = (char) CMD_POP | ARG_REG;
+                *((char *) code + num_of_commands) = (char) (CMD_POP | ARG_REG | ARG_CONS | ARG_RAM) ;
+                num_of_commands += sizeof(char);
+
+                *(int*)((char*)code + num_of_commands) = cons;
+                num_of_commands += sizeof(int);
+
+                if (SwitchReg(reg) == WRONG_REGISTER)
+                {
+                    printf("In Function Assembler: Wrong register at line %ld", i + 1);
+                    return WRONG_REGISTER;
+                }
+
+                *((char *) code + num_of_commands) = SwitchReg(reg);
+                num_of_commands += sizeof(char);
+            }
+            if (scan_case == REG_ADR)
+            {
+                *((char *) code + num_of_commands) = (char) (CMD_POP | ARG_REG | ARG_RAM);
                 num_of_commands += sizeof(char);
 
                 if (SwitchReg(reg) == WRONG_REGISTER)
@@ -112,6 +177,28 @@ size_t Assembler (Text* input, void* code)
 
                 *((char *) code + num_of_commands) = SwitchReg(reg);
                 num_of_commands += sizeof(char);
+            }
+            if (scan_case == REG)
+            {
+                *((char *) code + num_of_commands) = (char) (CMD_POP | ARG_REG);
+                num_of_commands += sizeof(char);
+
+                if (SwitchReg(reg) == WRONG_REGISTER)
+                {
+                    printf("In Function Assembler: Wrong register at line %ld", i + 1);
+                    return WRONG_REGISTER;
+                }
+
+                *((char *) code + num_of_commands) = SwitchReg(reg);
+                num_of_commands += sizeof(char);
+            }
+            if (scan_case == CONS_ADR)
+            {
+                *((char *) code + num_of_commands) = (char) (CMD_POP | ARG_CONS | ARG_RAM);
+                num_of_commands += sizeof(char);
+
+                *(int*)((char*)code + num_of_commands) = cons;
+                num_of_commands += sizeof(int);
             }
 		}
 		//add

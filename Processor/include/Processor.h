@@ -64,7 +64,7 @@ typedef struct Processor_t
 
     data_t REGS[4] = {0};
 
-//    data_t RAM[RAM_SIZE] = {0};
+    data_t RAM[RAM_SIZE] = {0};
 
     void* code = nullptr;
     int ip = 0;

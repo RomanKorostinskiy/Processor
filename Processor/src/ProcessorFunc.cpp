@@ -77,6 +77,8 @@ int Processor (Processor_t* processor)
                     arg += processor->REGS[*(char*)((char*)processor->code + processor->ip)];
                     processor->ip += sizeof(char);
                 }
+                if((type & ARG_RAM) != 0)
+                    arg = processor->RAM[arg];
 
                 StackPush (&processor->stack, arg);
                 break;
@@ -84,10 +86,25 @@ int Processor (Processor_t* processor)
             case CMD_POP:
                 processor->ip += sizeof(char);
 
-                if((type & ARG_REG) != 0)
+                if((type & ARG_RAM) == 0 && (type & ARG_REG) != 0 )
                 {
                     processor->REGS[*(char*)((char*)processor->code + processor->ip)] = StackPop(&processor->stack);
                     processor->ip += sizeof(char);
+                }
+                else if((type & ARG_RAM) != 0)
+                {
+                    if((type & ARG_CONS) != 0)
+                    {
+                        arg += *(int*)((char*)processor->code + processor->ip);
+                        processor->ip += sizeof(int);
+                    }
+                    if((type & ARG_REG) != 0)
+                    {
+                        arg += processor->REGS[*(char*)((char*)processor->code + processor->ip)];
+                        processor->ip += sizeof(char);
+                    }
+
+                    processor->RAM[arg] = StackPop(&processor->stack);
                 }
 
                 break;

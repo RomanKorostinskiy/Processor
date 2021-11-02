@@ -1,7 +1,12 @@
 push 5
-push 5
-add
-pop ax
-push 3 + ax
+push [5]
+push bx
+push [bx]
+push 5 + bx
+push [5 + bx]
+pop [5]
+pop bx
+pop [bx]
+pop [5 + bx]
 out
 hlt

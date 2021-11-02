@@ -1,6 +1,13 @@
-CMD_PUSH dec:                  1     CMD_PUSH hex:                  1
-CMD_PUSH|ARG_CONS dec:         33    CMD_PUSH|ARG_CONS hex:         21
-CMD_PUSH|ARG_REG dec:          65    CMD_PUSH|ARG_REG hex:          41
-CMD_PUSH|ARG_REG|ARG_CONS dec: 97    CMD_PUSH|ARG_REG|ARG_CONS hex: 61
+CMD_PUSH dec:                          1      CMD_PUSH hex:                            1
+CMD_PUSH|ARG_CONS dec:                 33     CMD_PUSH|ARG_CONS hex:                  21
+CMD_PUSH|ARG_CONS|ARG_RAM dec:         161    CMD_PUSH|ARG_CONS|ARG_RAM hex:          a1
+CMD_PUSH|ARG_REG dec:                  65     CMD_PUSH|ARG_REG hex:                   41
+CMD_PUSH|ARG_REG|ARG_RAM dec:          193    CMD_PUSH|ARG_REG|ARG_RAM hex:           c1
+CMD_PUSH|ARG_REG|ARG_CONS dec:         97     CMD_PUSH|ARG_REG|ARG_CONS hex:          61
+CMD_PUSH|ARG_REG|ARG_CONS|ARG_RAM dec: 225    CMD_PUSH|ARG_REG|ARG_CONS|ARG_RAM  hex: e1
 
-CMD_POP|ARG_REG dec:           66     CMD_POP|ARG_REG hex:          42
+CMD_POP dec:                          2      CMD_POP hex:                           2
+CMD_POP|ARG_CONS|ARG_RAM dec:         162    CMD_POP|ARG_CONS|ARG_RAM hex:          a2
+CMD_POP|ARG_REG dec:                  66     CMD_POP|ARG_REG hex:                   42
+CMD_POP|ARG_REG|ARG_RAM dec:          194    CMD_POP|ARG_REG|ARG_RAM hex:           c2
+CMD_POP|ARG_REG|ARG_CONS|ARG_RAM dec: 226    CMD_POP|ARG_REG|ARG_CONS|ARG_RAM  hex: e2

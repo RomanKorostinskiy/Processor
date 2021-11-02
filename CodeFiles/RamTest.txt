@@ -1,0 +1,17 @@
+push 1
+pop [0] ;[0] 1
+push 1
+pop ax
+push 2
+pop [ax] ;[1] 2
+push 5
+pop bx ;bx = 5
+push 3
+pop [5 + bx] ;[10] 3
+push [0]
+push [1]
+push [10]
+add
+add ;6
+out
+hlt

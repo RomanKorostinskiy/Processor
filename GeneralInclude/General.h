@@ -32,8 +32,9 @@ enum Commands
 
 enum Arguments
 {
-    ARG_CONS = 32,
+    ARG_CONS  = 32,
     ARG_REG   = 64,
+    ARG_RAM   = 128,
 };
 
 enum Registers
@@ -44,4 +45,4 @@ enum Registers
     DX = 3,
 };
 
-//const size_t RAM_SIZE = 1024;
+const size_t RAM_SIZE = 1024;
