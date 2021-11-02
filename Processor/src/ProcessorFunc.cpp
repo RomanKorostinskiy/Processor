@@ -16,7 +16,7 @@ size_t GetSizeOfFile (FILE* fp)
 {
     if (fp == nullptr)
     {
-        printf("In Function GetSizeOfFile: fp is nullptr");
+        printf("In Function GetSizeOfFile: fp is nullptr\n");
         return 0;
     }
 
@@ -33,7 +33,7 @@ int GetCode (Processor_t* processor, const char* file_name)
 
     if ((file_ptr = fopen(file_name, "rb")) == nullptr)
     {
-        printf("In Function GetCode: Can't open file");
+        printf("In Function GetCode: Can't open file\n");
         return CANT_OPEN_FILE;
     }
 
@@ -42,7 +42,7 @@ int GetCode (Processor_t* processor, const char* file_name)
 
     if (fread (processor->code, sizeof(char), processor->sizeof_code, file_ptr) != processor->sizeof_code)
     {
-        printf("In Function GetCode: Can't read code from file");
+        printf("In Function GetCode: Can't read code from file\n");
         return CANT_READ_FROM_FILE;
     }
 
@@ -135,7 +135,7 @@ int Processor (Processor_t* processor)
 
                 if (var1 == 0)
                 {
-                    printf("Сan't divide by zero");
+                    printf("Сan't divide by zero\n");
                     return WRONG_DATA;
                 }
 
@@ -158,10 +158,10 @@ int Processor (Processor_t* processor)
                 return 0;
 
             default:
-                printf("In Function Processor: Default case is reached");
+                printf("In Function Processor: Default case is reached\n");
                 return PROCESSOR_DEFAULT_CASE;
         }
     }
-    printf("In Function Processor: Default case is reached");
+
     return PROCESSOR_DEFAULT_CASE;
 }

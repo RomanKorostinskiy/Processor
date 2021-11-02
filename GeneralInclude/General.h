@@ -28,6 +28,13 @@ enum Commands
 	CMD_DIV  = 6,
 	CMD_OUT  = 7,
     CMD_IN   = 8,
+    CMD_JMP  = 9,
+    CMD_JA   = 10,
+    CMD_JAE  = 11,
+    CMD_JB   = 12,
+    CMD_JBE  = 13,
+    CMD_JE   = 14,
+    CMD_JNE  = 15,
 };
 
 enum Arguments
@@ -35,14 +42,6 @@ enum Arguments
     ARG_CONS  = 32,
     ARG_REG   = 64,
     ARG_RAM   = 128,
-};
-
-enum Registers
-{
-    AX = 0,
-    BX = 1,
-    CX = 2,
-    DX = 3,
 };
 
 const size_t RAM_SIZE = 1024;

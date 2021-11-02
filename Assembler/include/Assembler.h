@@ -29,6 +29,16 @@ typedef struct Text_t
 
 const size_t CMD_SIZE = 4;
 
+const size_t TAG_SIZE = 20;
+
+typedef struct Tags
+{
+    int adr = 0;
+    char* name = nullptr;
+}Tags;
+
+const int SIZE_OF_TAG_TABLE = 300;
+
 enum ScanCases
 {
     CONS_REG_ADR = 1,
@@ -37,6 +47,8 @@ enum ScanCases
     REG          = 4,
     CONS_ADR     = 5,
     CONS         = 6,
+    JMP          = 7,
+    TAG          = 8,
     NO_ARGS      = 0,
 };
 
@@ -45,8 +57,9 @@ enum Assembler_errors
     CANT_OPEN_FILE      = 1,
     WRONG_WRITE_TO_FILE = 2,
     PUSH_ARGS_ERROR     = 3,
-    WRONG_REGISTER      = 4,
-    SYNTAX_ERROR        = 5,
+    POP_ARGS_ERROR      = 4,
+    WRONG_REGISTER      = -1,
+    SYNTAX_ERROR        = -2,
 };
 
 const int MAX_SIZE_OF_CODE = 1000; //TODO придумать как считать размер кода
@@ -85,8 +98,12 @@ int GetFileNames (Text *text, int argc, char* argv[]);
 
 //-------- Assembler functions ---------
 
-char SwitchReg (char reg);
-
 size_t Assembler (Text* input, void* code);
+
+int ScanCommand(char* string, char* command, char* tag_name, data_t* cons, char* reg);
+
+int PushCase (void* code, int* num_of_commands, int scan_case, data_t cons, char reg);
+
+int PopCase (void* code, int* num_of_commands, int scan_case, data_t cons, char reg);
 
 int MakeBinaryFile (void* code, int sizeof_code, const char* file_name);

@@ -7,5 +7,5 @@ push 2
 mul ;4
 push 2
 div ;2
-out
-hlt
+out ;out = 2
+hlt ;ip = 31

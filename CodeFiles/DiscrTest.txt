@@ -13,5 +13,5 @@ push cx
 mul
 mul
 sub
-out
-hlt
+out ;out = in^2 + 4*in*in
+hlt ;ip = 28
