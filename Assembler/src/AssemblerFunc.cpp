@@ -7,11 +7,11 @@ size_t Assembler (Text* input, void* code)
 
     int num_of_commands = 0;
 
-    Tags* tag_table = nullptr;
-    tag_table = (Tags*) calloc(SIZE_OF_TAG_TABLE, sizeof(Tags));
-    int num_of_tag = 0;
-
+    static Tags* tag_table = (Tags*) calloc(SIZE_OF_TAG_TABLE, sizeof(Tags));
+    static int num_of_tags = 0;
+    static int asm_call_num = 1;
     assert(tag_table);
+
 
     for (size_t line = 0; line < input->num_of_strings; line++)
     {
@@ -20,6 +20,7 @@ size_t Assembler (Text* input, void* code)
 
         int scan_case = 0;
 
+        //scanning commands
         if ((scan_case = ScanCommand(input->strings[line].ptr, command, tag_name, &cons, &reg))
             == SYNTAX_ERROR)
         {
@@ -27,16 +28,69 @@ size_t Assembler (Text* input, void* code)
             return SYNTAX_ERROR;
         }
 
-        //tag
-        if(scan_case == TAG)
+       //commands with no args
+       if (scan_case == NO_ARGS)
         {
-            tag_table[num_of_tag].adr = num_of_commands;
+            NoArgsCommands (code, &num_of_commands, command);
+        }
+        //tag
+        else if(scan_case == TAG)
+        {
+            int  tag_place = 0;
 
-            size_t tag_len = strlen(tag_name);
-            tag_table[num_of_tag].name = (char*) calloc(tag_len, sizeof(char));
-            memcpy(tag_table[num_of_tag].name, tag_name, tag_len);
+            while(tag_place < num_of_tags)
+            {
+                if (strcmp(tag_name, tag_table[tag_place].name) == 0) //TODO валгринд ругается на strcmp (в случае когда метка после jmp не ругается)
+                    break;
 
-            num_of_tag++;
+                tag_place++;
+            }
+
+            if (tag_place == num_of_tags)
+            {
+                tag_table[num_of_tags].adr = num_of_commands;
+
+                size_t tag_len = strlen(tag_name);
+                tag_table[num_of_tags].name = (char *) calloc(tag_len, sizeof(char));
+                memcpy(tag_table[num_of_tags].name, tag_name, tag_len);
+
+                num_of_tags++;
+            }
+        }
+        //jump
+        else if (scan_case == JMP)
+        {
+            int  tag_place = 0;
+
+            while(tag_place < num_of_tags)
+            {
+                if (strcmp(tag_name, tag_table[tag_place].name) == 0) //TODO валгринд ругается на strcmp (в случае когда метка после jmp не ругается)
+                    break;
+
+                tag_place++;
+            }
+
+            JumpCommand (code, &num_of_commands, command);
+
+            if (tag_place < num_of_tags)
+            {
+                *(int*)((char*)code + num_of_commands) = tag_table[tag_place].adr;
+                num_of_commands += sizeof(int);
+            }
+            else if (tag_place == num_of_tags)
+            {
+                if (asm_call_num == 1)
+                {
+                    *(int*)((char*)code + num_of_commands) = -1;
+                    num_of_commands += sizeof(int);
+                }
+                else if (asm_call_num > 1)
+                {
+                    printf("In Function Assembler: Wrong Call argument at line %ld", line);
+                    return CALL_ARGS_ERROR;
+                }
+            }
+
         }
         //push
         else if(strcmp("push", command) == 0)
@@ -72,102 +126,6 @@ size_t Assembler (Text* input, void* code)
                 return POP_ARGS_ERROR;
             }
         }
-        //add
-        else if(strcmp("add", command) == 0) //TODO обернуть все безаргументные команды в одну функцию
-        {
-            *((char*)code + num_of_commands) = (char)CMD_ADD;
-            num_of_commands += sizeof(char);
-        }
-        //sub
-        else if(strcmp("sub", command) == 0)
-        {
-            *((char*)code + num_of_commands) = (char)CMD_SUB;
-            num_of_commands += sizeof(char);
-        }
-        //mul
-        else if(strcmp("mul", command) == 0)
-        {
-            *((char*)code + num_of_commands) = (char)CMD_MUL;
-            num_of_commands += sizeof(char);
-        }
-        //div
-        else if(strcmp("div", command) == 0)
-        {
-            *((char*)code + num_of_commands) = (char)CMD_DIV;
-            num_of_commands += sizeof(char);
-        }
-        //out
-        else if(strcmp("out", command) == 0)
-        {
-            *((char*)code + num_of_commands) = (char)CMD_OUT;
-            num_of_commands += sizeof(char);
-        }
-        //in
-        else if(strcmp("in", command) == 0)
-        {
-            *((char*)code + num_of_commands) = (char)CMD_IN;
-            num_of_commands += sizeof(char);
-        }
-        //hlt
-        else if(strcmp("hlt", command) == 0)
-        {
-            *((char*)code + num_of_commands) = (char)CMD_HLT;
-            num_of_commands += sizeof(char);
-        }
-        else if (scan_case == JMP)
-        {
-            int  tag_place = 0;
-
-            while(tag_place < num_of_tag)
-            {
-                if (strcmp(tag_name, tag_table[tag_place].name) == 0) //TODO валгринд ругается на strcmp (в случае когда метка после jmp не ругается)
-                    break;
-
-                tag_place++;
-            }
-
-            if(strcmp("jmp", command) == 0) //TODO обернуть всё это в функцию
-            {
-                *((char*)code + num_of_commands) = CMD_JMP;
-                num_of_commands += sizeof(char);
-            }
-            if(strcmp("jae", command) == 0)
-            {
-                *((char*)code + num_of_commands) = CMD_JMP;
-                num_of_commands += sizeof(char);
-            }
-            if(strcmp("jb", command) == 0)
-            {
-                *((char*)code + num_of_commands) = CMD_JMP;
-                num_of_commands += sizeof(char);
-            }
-            if(strcmp("jbe", command) == 0)
-            {
-                *((char*)code + num_of_commands) = CMD_JMP;
-                num_of_commands += sizeof(char);
-            }
-            if(strcmp("je", command) == 0)
-            {
-                *((char*)code + num_of_commands) = CMD_JMP;
-                num_of_commands += sizeof(char);
-            }
-            if(strcmp("jne", command) == 0)
-            {
-                *((char*)code + num_of_commands) = CMD_JMP;
-                num_of_commands += sizeof(char);
-            }
-
-            if (tag_place < num_of_tag)
-            {
-                *((char*)code + num_of_commands) = (char)tag_table[tag_place].adr;
-                num_of_commands += sizeof(char);
-            }
-            else if (tag_place == num_of_tag) //TODO сделать таблицу доступной при втором проходе
-            {
-                *((char*)code + num_of_commands) = -1;
-                num_of_commands += sizeof(char);
-            }
-        }
         else
         {
             printf("In Function Assembler: Unknown command name at line %ld\n", line + 1);
@@ -175,18 +133,29 @@ size_t Assembler (Text* input, void* code)
         }
     }
 
-    for (int i = 0; i < num_of_tag; i++)
-        free(tag_table[i].name);
+    if (asm_call_num > 1)
+    {
+        for (int i = 0; i < num_of_tags; i++)
+            free(tag_table[i].name);
 
-    free(tag_table);
+        free(tag_table);
+    }
+
+    asm_call_num++;
 
     return num_of_commands;
+
 }
 
 int ScanCommand(char* string, char* command, char* tag_name, data_t* cons, char* reg)
 {
     int scan_case = 0;
     int scan_ok = 0;
+
+    char* comment_place = nullptr;
+
+    if ((comment_place = strchr(string, ';')) != nullptr) //TODO строка add\t считывается как add, хотя массив команд на 4 символа, почему?
+        *comment_place = '\0';
 
     if (sscanf(string, "%s [%d + %cx%n]", command, cons, reg, &scan_ok) == 3
         && scan_ok)
@@ -295,7 +264,7 @@ int PopCase (void* code, int* num_of_commands, int scan_case, data_t cons, char 
 {
     if (scan_case == CONS_REG_ADR)
     {
-        *((char *) code + *num_of_commands) = (char) (CMD_POP | ARG_REG | ARG_CONS | ARG_RAM) ;
+        *((char *) code + *num_of_commands) = (char) (CMD_POP | ARG_REG | ARG_CONS | ARG_RAM);
         *num_of_commands += sizeof(char);
 
         *(int*)((char*)code + *num_of_commands) = cons;
@@ -336,6 +305,112 @@ int PopCase (void* code, int* num_of_commands, int scan_case, data_t cons, char 
     }
     else
         return POP_ARGS_ERROR;
+
+    return 0;
+}
+
+int NoArgsCommands (void* code, int* num_of_commands, char* command)
+{
+        //add
+    if(strcmp("add", command) == 0)
+    {
+        *((char*)code + *num_of_commands) = (char)CMD_ADD;
+        *num_of_commands += sizeof(char);
+    }
+        //sub
+    else if(strcmp("sub", command) == 0)
+    {
+        *((char*)code + *num_of_commands) = (char)CMD_SUB;
+        *num_of_commands += sizeof(char);
+    }
+        //mul
+    else if(strcmp("mul", command) == 0)
+    {
+        *((char*)code + *num_of_commands) = (char)CMD_MUL;
+        *num_of_commands += sizeof(char);
+    }
+        //div
+    else if(strcmp("div", command) == 0)
+    {
+        *((char*)code + *num_of_commands) = (char)CMD_DIV;
+        *num_of_commands += sizeof(char);
+    }
+        //out
+    else if(strcmp("out", command) == 0)
+    {
+        *((char*)code + *num_of_commands) = (char)CMD_OUT;
+        *num_of_commands += sizeof(char);
+    }
+        //in
+    else if(strcmp("in", command) == 0)
+    {
+        *((char*)code + *num_of_commands) = (char)CMD_IN;
+        *num_of_commands += sizeof(char);
+    }
+        //pop
+    else if(strcmp("pop", command) == 0)
+    {
+        *((char*)code + *num_of_commands) = (char)CMD_POP;
+        *num_of_commands += sizeof(char);
+    }
+        //ret
+    else if(strcmp("ret", command) == 0)
+    {
+        *((char*)code + *num_of_commands) = (char)CMD_RET;
+        *num_of_commands += sizeof(char);
+    }
+        //hlt
+    else if(strcmp("hlt", command) == 0)
+    {
+        *((char*)code + *num_of_commands) = (char)CMD_HLT;
+        *num_of_commands += sizeof(char);
+    }
+
+    return 0;
+}
+
+int JumpCommand (void* code, int* num_of_commands, char* command)
+{
+    if(strcmp("jmp", command) == 0)
+    {
+        *((char*)code + *num_of_commands) = CMD_JMP;
+        *num_of_commands += sizeof(char);
+    }
+    else if(strcmp("ja", command) == 0)
+    {
+        *((char*)code + *num_of_commands) = CMD_JA;
+        *num_of_commands += sizeof(char);
+    }
+    else if(strcmp("jae", command) == 0)
+    {
+        *((char*)code + *num_of_commands) = CMD_JAE;
+        *num_of_commands += sizeof(char);
+    }
+    else if(strcmp("jb", command) == 0)
+    {
+        *((char*)code + *num_of_commands) = CMD_JB;
+        *num_of_commands += sizeof(char);
+    }
+    else if(strcmp("jbe", command) == 0)
+    {
+        *((char*)code + *num_of_commands) = CMD_JBE;
+        *num_of_commands += sizeof(char);
+    }
+    else if(strcmp("je", command) == 0)
+    {
+        *((char*)code + *num_of_commands) = CMD_JE;
+        *num_of_commands += sizeof(char);
+    }
+    else if(strcmp("jne", command) == 0)
+    {
+        *((char*)code + *num_of_commands) = CMD_JNE;
+        *num_of_commands += sizeof(char);
+    }
+    else if(strcmp("call", command) == 0)
+    {
+        *((char*)code + *num_of_commands) = CMD_CALL;
+        *num_of_commands += sizeof(char);
+    }
 
     return 0;
 }

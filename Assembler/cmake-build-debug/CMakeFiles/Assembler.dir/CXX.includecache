@@ -20,11 +20,23 @@ limits.h
 ctype.h
 -
 
+../include/Assembler.h
+../GeneralInclude/General.h
+../GeneralInclude/General.h
+
 /home/roman/CS/C/Huawei/Processor/Assembler/include/Assembler.h
 ../GeneralInclude/General.h
 /home/roman/CS/C/Huawei/Processor/Assembler/GeneralInclude/General.h
 
+/home/roman/CS/C/Huawei/Processor/Assembler/src/Assembler.cpp
+../include/Assembler.h
+/home/roman/CS/C/Huawei/Processor/Assembler/include/Assembler.h
+
 /home/roman/CS/C/Huawei/Processor/Assembler/src/AssemblerFunc.cpp
 ../include/Assembler.h
 /home/roman/CS/C/Huawei/Processor/Assembler/include/Assembler.h
+
+/home/roman/CS/C/Huawei/Processor/RequiredPrograms/MakeStringFunc.cpp
+../include/Assembler.h
+/home/roman/CS/C/Huawei/Processor/include/Assembler.h
 

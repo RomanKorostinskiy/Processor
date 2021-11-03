@@ -27,9 +27,9 @@ typedef struct Text_t
 
 //-------- Assembler variables --------
 
-const size_t CMD_SIZE = 4;
+const size_t CMD_SIZE = 5;
 
-const size_t TAG_SIZE = 20;
+const size_t TAG_SIZE = 50;
 
 typedef struct Tags
 {
@@ -58,6 +58,7 @@ enum Assembler_errors
     WRONG_WRITE_TO_FILE = 2,
     PUSH_ARGS_ERROR     = 3,
     POP_ARGS_ERROR      = 4,
+    CALL_ARGS_ERROR     = 5,
     WRONG_REGISTER      = -1,
     SYNTAX_ERROR        = -2,
 };
@@ -105,5 +106,9 @@ int ScanCommand(char* string, char* command, char* tag_name, data_t* cons, char*
 int PushCase (void* code, int* num_of_commands, int scan_case, data_t cons, char reg);
 
 int PopCase (void* code, int* num_of_commands, int scan_case, data_t cons, char reg);
+
+int NoArgsCommands (void* code, int* num_of_commands, char* command);
+
+int JumpCommand (void* code, int* num_of_commands, char* command);
 
 int MakeBinaryFile (void* code, int sizeof_code, const char* file_name);

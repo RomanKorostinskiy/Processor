@@ -21,5 +21,15 @@ int main()
     fprintf(fp, "CMD_POP|ARG_REG|ARG_RAM dec:          %d    CMD_POP|ARG_REG|ARG_RAM hex:           %x\n", CMD_POP | ARG_REG | ARG_RAM, CMD_POP | ARG_REG | ARG_RAM);
     fprintf(fp, "CMD_POP|ARG_REG|ARG_CONS|ARG_RAM dec: %d    CMD_POP|ARG_REG|ARG_CONS|ARG_RAM  hex: %x\n", CMD_POP | ARG_REG | ARG_CONS | ARG_RAM, CMD_POP | ARG_REG | ARG_CONS | ARG_RAM);
 
+    fprintf(fp, "\nCMD_JMP dec:  %d      CMD_JMP hex:  %x\n", CMD_JMP, CMD_JMP);
+    fprintf(fp, "CMD_JA dec:   %d     CMD_JA hex:   %x\n", CMD_JA, CMD_JA);
+    fprintf(fp, "CMD_JAE dec:  %d     CMD_JAE hex:  %x\n", CMD_JAE, CMD_JAE);
+    fprintf(fp, "CMD_JB dec:   %d     CMD_JB hex:   %x\n", CMD_JB, CMD_JB);
+    fprintf(fp, "CMD_JBE dec:  %d     CMD_JBE hex:  %x\n", CMD_JBE, CMD_JBE);
+    fprintf(fp, "CMD_JE dec:   %d     CMD_JE hex:   %x\n", CMD_JE, CMD_JE);
+    fprintf(fp, "CMD_JNE dec:  %d     CMD_JNE hex:  %x\n", CMD_JNE, CMD_JNE);
+    fprintf(fp, "CMD_CALL dec: %d     CMD_CALL hex: %x\n", CMD_CALL, CMD_CALL);
+    fprintf(fp, "CMD_RET dec:  %d     CMD_RET hex:  %x\n", CMD_RET, CMD_RET);
+
     fclose(fp);
 }

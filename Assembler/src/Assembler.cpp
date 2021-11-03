@@ -6,7 +6,7 @@ int main(int argc, char* argv[])
 
     if (GetFileNames(&input_text, argc, argv) == 1)
     {
-        printf("Error: wrong name of file(s)");
+        printf("Error: wrong name of file(s)\n");
         return 1;
     }
 

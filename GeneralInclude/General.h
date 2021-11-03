@@ -35,6 +35,8 @@ enum Commands
     CMD_JBE  = 13,
     CMD_JE   = 14,
     CMD_JNE  = 15,
+    CMD_CALL = 16,
+    CMD_RET  = 17,
 };
 
 enum Arguments

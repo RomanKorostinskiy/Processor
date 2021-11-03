@@ -1,6 +1,6 @@
 push 1
 push 2
-add ;3
+add	;3
 push 1
 sub ;2
 push 2

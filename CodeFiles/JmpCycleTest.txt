@@ -1,0 +1,16 @@
+in
+pop ax ;save biggest
+
+:cycle
+in
+push ax
+jae stop ;check condition
+pop ax
+
+push 2
+mul
+out
+jmp cycle
+
+:stop	;print in*2 until it bacame more than first input numder
+hlt		;ip = 26

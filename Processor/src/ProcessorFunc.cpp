@@ -86,7 +86,9 @@ int Processor (Processor_t* processor)
             case CMD_POP:
                 processor->ip += sizeof(char);
 
-                if((type & ARG_RAM) == 0 && (type & ARG_REG) != 0 )
+                if(type == 0)
+                    StackPop(&processor->stack);
+                else if((type & ARG_RAM) == 0 && (type & ARG_REG) != 0 )
                 {
                     processor->REGS[*(char*)((char*)processor->code + processor->ip)] = StackPop(&processor->stack);
                     processor->ip += sizeof(char);
@@ -116,10 +118,10 @@ int Processor (Processor_t* processor)
                 break;
 
             case CMD_SUB:
-                var1 = StackPop(&processor->stack);
                 var2 = StackPop(&processor->stack);
+                var1 = StackPop(&processor->stack);
 
-                StackPush(&processor->stack, var2 - var1);
+                StackPush(&processor->stack, var1 - var2);
                 processor->ip += sizeof(char);
                 break;
 
@@ -130,21 +132,21 @@ int Processor (Processor_t* processor)
                 break;
 
             case CMD_DIV:
-                var1 = StackPop(&processor->stack);
                 var2 = StackPop(&processor->stack);
+                var1 = StackPop(&processor->stack);
 
-                if (var1 == 0)
+                if (var2 == 0)
                 {
                     printf("Сan't divide by zero\n");
                     return WRONG_DATA;
                 }
 
-                StackPush(&processor->stack, var2 / var1);
+                StackPush(&processor->stack, var1 / var2);
                 processor->ip += sizeof(char);
                 break;
 
             case CMD_OUT:
-                printf("\n%d\n", StackPop(&processor->stack));
+                printf("out: %d\n", StackPop(&processor->stack));
                 processor->ip += sizeof(char);
                 break;
 
@@ -152,6 +154,113 @@ int Processor (Processor_t* processor)
                 scanf("%d", &var1);
                 StackPush(&processor->stack, var1);
                 processor->ip += sizeof(char);
+                break;
+
+            case CMD_JMP:
+                processor->ip += sizeof(char);
+
+                processor->ip = *(int*)((char*)processor->code + processor->ip);
+                break;
+
+            case CMD_JA:
+                var2 = StackPop(&processor->stack);
+                var1 = StackPop(&processor->stack);
+
+                processor->ip += sizeof(char);
+
+                if (var1 > var2)
+                    processor->ip = *(int *) ((char *) processor->code + processor->ip);
+                else
+                    processor->ip += sizeof(int);
+
+                StackPush(&processor->stack, var1);
+                StackPush(&processor->stack, var2);
+                break;
+
+            case CMD_JAE:
+                var2 = StackPop(&processor->stack);
+                var1 = StackPop(&processor->stack);
+
+                processor->ip += sizeof(char);
+
+                if (var1 >= var2)
+                    processor->ip = *(int *) ((char *) processor->code + processor->ip);
+                else
+                    processor->ip += sizeof(int);
+
+                StackPush(&processor->stack, var1);
+                StackPush(&processor->stack, var2);
+                break;
+
+            case CMD_JB:
+                var2 = StackPop(&processor->stack);
+                var1 = StackPop(&processor->stack);
+
+                processor->ip += sizeof(char);
+
+                if (var1 < var2)
+                    processor->ip = *(int *) ((char *) processor->code + processor->ip);
+                else
+                    processor->ip += sizeof(int);
+
+                StackPush(&processor->stack, var1);
+                StackPush(&processor->stack, var2);
+                break;
+
+            case CMD_JBE:
+                var2 = StackPop(&processor->stack);
+                var1 = StackPop(&processor->stack);
+
+                processor->ip += sizeof(char);
+
+                if (var1 <= var2)
+                    processor->ip = *(int *) ((char *) processor->code + processor->ip);
+                else
+                    processor->ip += sizeof(int);
+
+                StackPush(&processor->stack, var1);
+                StackPush(&processor->stack, var2);
+                break;
+
+            case CMD_JE:
+                var2 = StackPop(&processor->stack);
+                var1 = StackPop(&processor->stack);
+
+                processor->ip += sizeof(char);
+
+                if (var1 == var2)
+                    processor->ip = *(int *) ((char *) processor->code + processor->ip);
+                else
+                    processor->ip += sizeof(int);
+
+                StackPush(&processor->stack, var1);
+                StackPush(&processor->stack, var2);
+                break;
+
+            case CMD_JNE:
+                var2 = StackPop(&processor->stack);
+                var1 = StackPop(&processor->stack);
+
+                processor->ip += sizeof(char);
+
+                if (var1 != var2)
+                    processor->ip = *(int *) ((char *) processor->code + processor->ip);
+                else
+                    processor->ip += sizeof(int);
+
+                StackPush(&processor->stack, var1);
+                StackPush(&processor->stack, var2);
+                break;
+
+            case CMD_CALL:
+                processor->ip += sizeof(char);
+                StackPush(&processor->stack, (data_t)(processor->ip + sizeof(int)));
+
+                processor->ip = *(int*)((char*)processor->code + processor->ip);
+                break;
+
+            case CMD_RET:
+                processor->ip = StackPop(&processor->stack);
                 break;
 
             case CMD_HLT:

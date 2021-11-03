@@ -22,7 +22,7 @@ int ReadFromFile (Text *text)
 
 	if (fp == nullptr)
     {
-        printf("Wrong input file");
+        printf("Wrong input file\n");
         return WRONG_INPUT_FILE;
     }
 

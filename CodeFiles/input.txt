@@ -1,7 +1,0 @@
-push 1
-push 2
-jmp next
-push 3
-:next
-out
-hlt

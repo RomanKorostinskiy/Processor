@@ -1,0 +1,14 @@
+in
+in
+ja bigger1
+
+out
+pop
+jmp bigger2
+
+:bigger1
+pop
+out
+
+:bigger2	;print biggest number
+hlt 		;ip =17

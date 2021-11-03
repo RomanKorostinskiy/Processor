@@ -1,0 +1,138 @@
+in
+
+push 1
+je func1
+pop
+
+push 2
+je func2
+pop
+
+push 3
+je func3
+pop
+
+push 4
+je func4
+pop
+
+push 5
+je func5
+pop
+
+jmp end ;default
+
+:func1
+call Simple
+jmp end
+
+:func2
+call Discr
+jmp end
+
+:func3
+call Ram
+jmp end
+
+:func4
+call JmpCompare
+jmp end
+
+:func5
+call JmpCycle
+jmp end
+
+:end
+hlt
+
+
+:Simple
+push 1
+push 2
+add	;3
+push 1
+sub ;2
+push 2
+mul ;4
+push 2
+div ;2
+out ;out = 2
+ret ;ip = 31
+
+
+:Discr
+in
+pop ax
+in
+pop bx
+in
+pop cx
+push bx
+push bx
+mul
+push 4
+push ax
+push cx
+mul
+mul
+sub
+out
+ret
+
+
+:Ram
+in
+pop [0] ;[0] 1
+push 1
+pop ax ;ax = 2
+in
+pop [ax] ;[1] 2
+push 5
+pop bx ;bx = 5
+in
+pop [5 + bx] ;[10] 3
+push [0]
+push [1]
+push [10]
+add
+add
+out ;out = in + in + in
+ret ;ip = 49
+
+
+:JmpCompare
+in
+in
+ja bigger1
+
+out
+pop
+jmp bigger2
+
+:bigger1
+pop
+out
+
+:bigger2	;print biggest number
+ret		    ;ip =17
+
+
+:JmpCycle
+in
+pop ax ;save biggest
+
+:cycle
+in
+push ax
+jae stop ;check condition
+pop ax
+
+push 2
+mul
+out
+jmp cycle
+
+:stop	;print in*2 until it bacame more than first input numder
+pop ax
+pop
+ret		;ip = 26

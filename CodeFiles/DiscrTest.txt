@@ -4,6 +4,11 @@ in
 pop bx
 in
 pop cx
+call Discr
+hlt
+
+
+:Discr
 push bx
 push bx
 mul
@@ -13,5 +18,5 @@ push cx
 mul
 mul
 sub
-out ;out = in^2 + 4*in*in
-hlt ;ip = 28
+out
+ret
