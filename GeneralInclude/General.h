@@ -6,8 +6,9 @@
 #include <assert.h>
 #include <limits.h>
 #include <ctype.h>
+#include <math.h>
 
-#define INT_DATA
+#define FLOAT_DATA
 
 #ifdef FLOAT_DATA
 typedef double data_t;

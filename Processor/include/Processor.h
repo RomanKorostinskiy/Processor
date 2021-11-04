@@ -24,16 +24,6 @@ enum Stack_errors
     HASH_BAD         = 256,
 };
 
-#define INT_DATA
-
-#ifdef FLOAT_DATA
-typedef double data_t;
-#endif
-
-#ifdef INT_DATA
-typedef int data_t;
-#endif
-
 typedef size_t canary_t;
 typedef size_t hash_t;
 
@@ -58,6 +48,8 @@ typedef struct Stack_t
 
 //--------- Processor variables ---------
 
+const double PRECISION = 1E-10;
+
 typedef struct Processor_t
 {
     Stack stack = {};
@@ -67,7 +59,7 @@ typedef struct Processor_t
     data_t RAM[RAM_SIZE] = {0};
 
     void* code = nullptr;
-    int ip = 0;
+    size_t ip = 0;
     size_t sizeof_code = 0;
 }Processor_t;
 
@@ -200,3 +192,7 @@ size_t GetSizeOfFile (FILE* fp);
 int GetCode (Processor_t* processor, const char* file_name);
 
 int Processor (Processor_t* processor);
+
+int IsZero (double value);
+
+int IsEqual (double value1, double value2);

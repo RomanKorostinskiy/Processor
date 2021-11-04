@@ -8,7 +8,7 @@ size_t Assembler (Text* input, void* code)
     int num_of_commands = 0;
 
     static Tags* tag_table = (Tags*) calloc(SIZE_OF_TAG_TABLE, sizeof(Tags));
-    static int num_of_tags = 0;
+    static size_t num_of_tags = 0;
     static int asm_call_num = 1;
     assert(tag_table);
 
@@ -60,7 +60,7 @@ size_t Assembler (Text* input, void* code)
         //jump
         else if (scan_case == JMP)
         {
-            int  tag_place = 0;
+            size_t  tag_place = 0;
 
             while(tag_place < num_of_tags)
             {
@@ -74,15 +74,15 @@ size_t Assembler (Text* input, void* code)
 
             if (tag_place < num_of_tags)
             {
-                *(int*)((char*)code + num_of_commands) = tag_table[tag_place].adr;
-                num_of_commands += sizeof(int);
+                *(size_t*)((char*)code + num_of_commands) = tag_table[tag_place].adr;
+                num_of_commands += sizeof(size_t);
             }
             else if (tag_place == num_of_tags)
             {
                 if (asm_call_num == 1)
                 {
-                    *(int*)((char*)code + num_of_commands) = -1;
-                    num_of_commands += sizeof(int);
+                    *(size_t*)((char*)code + num_of_commands) = -1;
+                    num_of_commands += sizeof(size_t);
                 }
                 else if (asm_call_num > 1)
                 {
@@ -157,10 +157,10 @@ int ScanCommand(char* string, char* command, char* tag_name, data_t* cons, char*
     if ((comment_place = strchr(string, ';')) != nullptr) //TODO строка add\t считывается как add, хотя массив команд на 4 символа, почему?
         *comment_place = '\0';
 
-    if (sscanf(string, "%s [%d + %cx%n]", command, cons, reg, &scan_ok) == 3
+    if (sscanf(string, "%s [%lf + %cx%n]", command, cons, reg, &scan_ok) == 3
         && scan_ok)
         scan_case = CONS_REG_ADR;
-    else if (sscanf(string, "%s %d + %cx%n", command, cons, reg, &scan_ok) == 3
+    else if (sscanf(string, "%s %lf + %cx%n", command, cons, reg, &scan_ok) == 3
              && scan_ok)
         scan_case = CONS_REG;
     else if(sscanf(string, "%s [%cx]%n", command, reg, &scan_ok) == 2
@@ -169,10 +169,10 @@ int ScanCommand(char* string, char* command, char* tag_name, data_t* cons, char*
     else if(sscanf(string, "%s %cx%n", command, reg, &scan_ok) == 2
             && scan_ok)
         scan_case = REG;
-    else if(sscanf(string, "%s [%d]%n", command, cons, &scan_ok) == 2
+    else if(sscanf(string, "%s [%lf]%n", command, cons, &scan_ok) == 2
             && scan_ok)
         scan_case = CONS_ADR;
-    else if(sscanf(string, "%s %d%n", command, cons, &scan_ok) == 2
+    else if(sscanf(string, "%s %lf%n", command, cons, &scan_ok) == 2
             && scan_ok)
         scan_case = CONS;
     else if(sscanf(string, "%s %s%n", command, tag_name,  &scan_ok) == 2
@@ -197,8 +197,8 @@ int PushCase (void* code, int* num_of_commands, int scan_case, data_t cons, char
         *((char*)code + *num_of_commands) = (char) (CMD_PUSH | ARG_REG | ARG_CONS | ARG_RAM);
         *num_of_commands += sizeof(char);
 
-        *(int*)((char*)code + *num_of_commands) = cons;
-        *num_of_commands += sizeof(int);
+        *(data_t*)((char*)code + *num_of_commands) = cons;
+        *num_of_commands += sizeof(data_t);
 
         if (reg - 'a' < 0 || reg - 'a' > 3)
             return WRONG_REGISTER;
@@ -210,8 +210,8 @@ int PushCase (void* code, int* num_of_commands, int scan_case, data_t cons, char
         *((char*)code + *num_of_commands) = (char) (CMD_PUSH | ARG_REG | ARG_CONS);
         *num_of_commands += sizeof(char);
 
-        *(int*)((char*)code + *num_of_commands) = cons;
-        *num_of_commands += sizeof(int);
+        *(data_t*)((char*)code + *num_of_commands) = cons;
+        *num_of_commands += sizeof(data_t);
 
         if (reg - 'a' < 0 || reg - 'a' > 3)
             return WRONG_REGISTER;
@@ -243,16 +243,16 @@ int PushCase (void* code, int* num_of_commands, int scan_case, data_t cons, char
         *((char *) code + *num_of_commands) = (char) (CMD_PUSH | ARG_CONS | ARG_RAM);
         *num_of_commands += sizeof(char);
 
-        *(int*)((char*)code + *num_of_commands) = cons;
-        *num_of_commands += sizeof(int);
+        *(data_t*)((char*)code + *num_of_commands) = cons;
+        *num_of_commands += sizeof(data_t);
     }
     else if (scan_case == CONS)
     {
         *((char *) code + *num_of_commands) = (char) (CMD_PUSH | ARG_CONS);
         *num_of_commands += sizeof(char);
 
-        *(int*)((char*)code + *num_of_commands) = cons;
-        *num_of_commands += sizeof(int);
+        *(data_t*)((char*)code + *num_of_commands) = cons;
+        *num_of_commands += sizeof(data_t);
     }
     else
         return PUSH_ARGS_ERROR;
@@ -267,8 +267,8 @@ int PopCase (void* code, int* num_of_commands, int scan_case, data_t cons, char 
         *((char *) code + *num_of_commands) = (char) (CMD_POP | ARG_REG | ARG_CONS | ARG_RAM);
         *num_of_commands += sizeof(char);
 
-        *(int*)((char*)code + *num_of_commands) = cons;
-        *num_of_commands += sizeof(int);
+        *(data_t*)((char*)code + *num_of_commands) = cons;
+        *num_of_commands += sizeof(data_t);
 
         if (reg - 'a' < 0 || reg - 'a' > 3)
             return WRONG_REGISTER;
@@ -300,8 +300,8 @@ int PopCase (void* code, int* num_of_commands, int scan_case, data_t cons, char 
         *((char *) code + *num_of_commands) = (char) (CMD_POP | ARG_CONS | ARG_RAM);
         *num_of_commands += sizeof(char);
 
-        *(int*)((char*)code + *num_of_commands) = cons;
-        *num_of_commands += sizeof(int);
+        *(data_t*)((char*)code + *num_of_commands) = cons;
+        *num_of_commands += sizeof(data_t);
     }
     else
         return POP_ARGS_ERROR;

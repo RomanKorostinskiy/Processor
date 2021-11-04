@@ -55,9 +55,9 @@ int Processor (Processor_t* processor)
 {
     while(processor->ip < processor->sizeof_code)
     {
-        int var1 = 0;
-        int var2 = 0;
-        int arg = 0;
+        data_t var1 = 0;
+        data_t var2 = 0;
+        data_t arg = 0;
 
         int cmd = *((char*)processor->code + processor->ip) & 0x1F;
         int type = *((char*)processor->code + processor->ip) & 0xE0;
@@ -69,8 +69,8 @@ int Processor (Processor_t* processor)
 
                 if((type & ARG_CONS) != 0)
                 {
-                    arg += *(int*)((char*)processor->code + processor->ip);
-                    processor->ip += sizeof(int);
+                    arg += *(data_t*)((char*)processor->code + processor->ip);
+                    processor->ip += sizeof(data_t);
                 }
                 if((type & ARG_REG) != 0)
                 {
@@ -78,7 +78,7 @@ int Processor (Processor_t* processor)
                     processor->ip += sizeof(char);
                 }
                 if((type & ARG_RAM) != 0)
-                    arg = processor->RAM[arg];
+                    arg = processor->RAM[(int)arg];
 
                 StackPush (&processor->stack, arg);
                 break;
@@ -97,8 +97,8 @@ int Processor (Processor_t* processor)
                 {
                     if((type & ARG_CONS) != 0)
                     {
-                        arg += *(int*)((char*)processor->code + processor->ip);
-                        processor->ip += sizeof(int);
+                        arg += *(data_t*)((char*)processor->code + processor->ip);
+                        processor->ip += sizeof(data_t);
                     }
                     if((type & ARG_REG) != 0)
                     {
@@ -106,7 +106,7 @@ int Processor (Processor_t* processor)
                         processor->ip += sizeof(char);
                     }
 
-                    processor->RAM[arg] = StackPop(&processor->stack);
+                    processor->RAM[(int)arg] = StackPop(&processor->stack);
                 }
 
                 break;
@@ -135,7 +135,7 @@ int Processor (Processor_t* processor)
                 var2 = StackPop(&processor->stack);
                 var1 = StackPop(&processor->stack);
 
-                if (var2 == 0)
+                if (IsZero(var2))
                 {
                     printf("Сan't divide by zero\n");
                     return WRONG_DATA;
@@ -146,12 +146,12 @@ int Processor (Processor_t* processor)
                 break;
 
             case CMD_OUT:
-                printf("out: %d\n", StackPop(&processor->stack));
+                printf("out: %lf\n", StackPop(&processor->stack));
                 processor->ip += sizeof(char);
                 break;
 
             case CMD_IN:
-                scanf("%d", &var1);
+                scanf("%lf", &var1);
                 StackPush(&processor->stack, var1);
                 processor->ip += sizeof(char);
                 break;
@@ -159,7 +159,7 @@ int Processor (Processor_t* processor)
             case CMD_JMP:
                 processor->ip += sizeof(char);
 
-                processor->ip = *(int*)((char*)processor->code + processor->ip);
+                processor->ip = *(size_t*)((char*)processor->code + processor->ip);
                 break;
 
             case CMD_JA:
@@ -169,9 +169,9 @@ int Processor (Processor_t* processor)
                 processor->ip += sizeof(char);
 
                 if (var1 > var2)
-                    processor->ip = *(int *) ((char *) processor->code + processor->ip);
+                    processor->ip = *(size_t*)((char *) processor->code + processor->ip);
                 else
-                    processor->ip += sizeof(int);
+                    processor->ip += sizeof(size_t);
 
                 StackPush(&processor->stack, var1);
                 StackPush(&processor->stack, var2);
@@ -184,9 +184,9 @@ int Processor (Processor_t* processor)
                 processor->ip += sizeof(char);
 
                 if (var1 >= var2)
-                    processor->ip = *(int *) ((char *) processor->code + processor->ip);
+                    processor->ip = *(size_t*)((char *) processor->code + processor->ip);
                 else
-                    processor->ip += sizeof(int);
+                    processor->ip += sizeof(size_t);
 
                 StackPush(&processor->stack, var1);
                 StackPush(&processor->stack, var2);
@@ -199,9 +199,9 @@ int Processor (Processor_t* processor)
                 processor->ip += sizeof(char);
 
                 if (var1 < var2)
-                    processor->ip = *(int *) ((char *) processor->code + processor->ip);
+                    processor->ip = *(size_t*)((char *) processor->code + processor->ip);
                 else
-                    processor->ip += sizeof(int);
+                    processor->ip += sizeof(size_t);
 
                 StackPush(&processor->stack, var1);
                 StackPush(&processor->stack, var2);
@@ -214,9 +214,9 @@ int Processor (Processor_t* processor)
                 processor->ip += sizeof(char);
 
                 if (var1 <= var2)
-                    processor->ip = *(int *) ((char *) processor->code + processor->ip);
+                    processor->ip = *(size_t*)((char *) processor->code + processor->ip);
                 else
-                    processor->ip += sizeof(int);
+                    processor->ip += sizeof(size_t);
 
                 StackPush(&processor->stack, var1);
                 StackPush(&processor->stack, var2);
@@ -228,10 +228,10 @@ int Processor (Processor_t* processor)
 
                 processor->ip += sizeof(char);
 
-                if (var1 == var2)
-                    processor->ip = *(int *) ((char *) processor->code + processor->ip);
+                if (IsEqual(var1, var2))
+                    processor->ip = *(size_t*)((char *) processor->code + processor->ip);
                 else
-                    processor->ip += sizeof(int);
+                    processor->ip += sizeof(size_t);
 
                 StackPush(&processor->stack, var1);
                 StackPush(&processor->stack, var2);
@@ -243,10 +243,10 @@ int Processor (Processor_t* processor)
 
                 processor->ip += sizeof(char);
 
-                if (var1 != var2)
-                    processor->ip = *(int *) ((char *) processor->code + processor->ip);
+                if (!IsEqual(var1, var2))
+                    processor->ip = *(size_t*)((char *) processor->code + processor->ip);
                 else
-                    processor->ip += sizeof(int);
+                    processor->ip += sizeof(size_t);
 
                 StackPush(&processor->stack, var1);
                 StackPush(&processor->stack, var2);
@@ -254,13 +254,13 @@ int Processor (Processor_t* processor)
 
             case CMD_CALL:
                 processor->ip += sizeof(char);
-                StackPush(&processor->stack, (data_t)(processor->ip + sizeof(int)));
+                StackPush(&processor->stack, (data_t)(processor->ip + sizeof(size_t))); //TODO
 
-                processor->ip = *(int*)((char*)processor->code + processor->ip);
+                processor->ip = *(size_t*)((char*)processor->code + processor->ip);
                 break;
 
             case CMD_RET:
-                processor->ip = StackPop(&processor->stack);
+                processor->ip = (size_t)StackPop(&processor->stack);
                 break;
 
             case CMD_HLT:
@@ -273,4 +273,14 @@ int Processor (Processor_t* processor)
     }
 
     return PROCESSOR_DEFAULT_CASE;
+}
+
+int IsZero (double value)
+{
+    return fabs (value) < PRECISION;
+}
+
+int IsEqual (double value1, double value2)
+{
+    return fabs (value1 - value2) < PRECISION;
 }

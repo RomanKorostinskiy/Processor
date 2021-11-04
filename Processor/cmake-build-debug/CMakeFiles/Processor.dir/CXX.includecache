@@ -19,21 +19,7 @@ limits.h
 -
 ctype.h
 -
-
-../include/Processor.h
-../GeneralInclude/General.h
-../GeneralInclude/General.h
-stdio.h
--
-stdlib.h
--
-string.h
--
-assert.h
--
-limits.h
--
-ctype.h
+math.h
 -
 
 /home/roman/CS/C/Huawei/Processor/Processor/include/Processor.h
@@ -52,15 +38,7 @@ limits.h
 ctype.h
 -
 
-/home/roman/CS/C/Huawei/Processor/Processor/src/Processor.cpp
-../include/Processor.h
-/home/roman/CS/C/Huawei/Processor/Processor/include/Processor.h
-
 /home/roman/CS/C/Huawei/Processor/Processor/src/ProcessorFunc.cpp
 ../include/Processor.h
 /home/roman/CS/C/Huawei/Processor/Processor/include/Processor.h
-
-/home/roman/CS/C/Huawei/Processor/RequiredPrograms/StackFunc.cpp
-../include/Processor.h
-/home/roman/CS/C/Huawei/Processor/include/Processor.h
 

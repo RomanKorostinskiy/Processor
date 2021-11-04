@@ -33,7 +33,7 @@ const size_t TAG_SIZE = 50;
 
 typedef struct Tags
 {
-    int adr = 0;
+    size_t adr = 0;
     char* name = nullptr;
 }Tags;
 
@@ -63,7 +63,7 @@ enum Assembler_errors
     SYNTAX_ERROR        = -2,
 };
 
-const int MAX_SIZE_OF_CODE = 1000; //TODO придумать как считать размер кода
+const int MAX_SIZE_OF_CODE = 4096; //TODO придумать как считать размер кода
 
 //--------- Onegin functions ---------
 
