@@ -1,5 +1,26 @@
 #include "../include/Assembler.h"
 
+int MakeBinaryFile (void* code, size_t sizeof_code, const char* file_name)
+{
+    FILE* file_ptr = nullptr;
+
+    file_ptr = fopen(file_name, "wb");
+
+    if (file_ptr == nullptr)
+    {
+        printf("In Function MakeBinaryFile: Can't open file\n");
+        return CANT_OPEN_FILE;
+    }
+
+    if (fwrite(code, sizeof(char), sizeof_code, file_ptr) != sizeof_code)
+    {
+        printf("In Function MakeBinaryFile: Wrong write of code\n");
+        return WRONG_WRITE_TO_FILE;
+    }
+
+    return 0;
+}
+
 size_t Assembler (Text* input, void* code)
 {
     char command[CMD_SIZE] = {0};
@@ -31,16 +52,20 @@ size_t Assembler (Text* input, void* code)
        //commands with no args
        if (scan_case == NO_ARGS)
         {
-            NoArgsCommands (code, &num_of_commands, command);
+            if (NoArgsCommands (code, &num_of_commands, command) == SYNTAX_ERROR)
+            {
+                printf("In Function Assembler: Unknown command name at line %ld\n", line + 1);
+                return SYNTAX_ERROR;
+            }
         }
         //tag
         else if(scan_case == TAG)
         {
             int  tag_place = 0;
 
-            while(tag_place < num_of_tags)
+            while (num_of_tags > 0 && tag_place < num_of_tags)
             {
-                if (strcmp(tag_name, tag_table[tag_place].name) == 0) //TODO валгринд ругается на strcmp (в случае когда метка после jmp не ругается)
+                if (strcmp(tag_name, tag_table[tag_place].name) == 0) //TODO валгринд ругается на strcmp
                     break;
 
                 tag_place++;
@@ -62,9 +87,9 @@ size_t Assembler (Text* input, void* code)
         {
             size_t  tag_place = 0;
 
-            while(tag_place < num_of_tags)
+            while(num_of_tags > 0 && tag_place < num_of_tags)
             {
-                if (strcmp(tag_name, tag_table[tag_place].name) == 0) //TODO валгринд ругается на strcmp (в случае когда метка после jmp не ругается)
+                if (strcmp(tag_name, tag_table[tag_place].name) == 0) //TODO валгринд ругается на strcmp
                     break;
 
                 tag_place++;
@@ -90,7 +115,6 @@ size_t Assembler (Text* input, void* code)
                     return CALL_ARGS_ERROR;
                 }
             }
-
         }
         //push
         else if(strcmp("push", command) == 0)
@@ -200,7 +224,7 @@ int PushCase (void* code, int* num_of_commands, int scan_case, data_t cons, char
         *(data_t*)((char*)code + *num_of_commands) = cons;
         *num_of_commands += sizeof(data_t);
 
-        if (reg - 'a' < 0 || reg - 'a' > 3)
+        if (reg - 'a' < 0 || reg - 'a' > 7)
             return WRONG_REGISTER;
         *((char *) code + *num_of_commands) = (char)(reg - 'a');
         *num_of_commands += sizeof(char);
@@ -213,7 +237,7 @@ int PushCase (void* code, int* num_of_commands, int scan_case, data_t cons, char
         *(data_t*)((char*)code + *num_of_commands) = cons;
         *num_of_commands += sizeof(data_t);
 
-        if (reg - 'a' < 0 || reg - 'a' > 3)
+        if (reg - 'a' < 0 || reg - 'a' > 7)
             return WRONG_REGISTER;
         *((char *) code + *num_of_commands) = (char)(reg - 'a');
         *num_of_commands += sizeof(char);
@@ -223,7 +247,7 @@ int PushCase (void* code, int* num_of_commands, int scan_case, data_t cons, char
         *((char *) code + *num_of_commands) = (char) (CMD_PUSH | ARG_REG | ARG_RAM);
         *num_of_commands += sizeof(char);
 
-        if (reg - 'a' < 0 || reg - 'a' > 3)
+        if (reg - 'a' < 0 || reg - 'a' > 7)
             return WRONG_REGISTER;
         *((char *) code + *num_of_commands) = (char)(reg - 'a');
         *num_of_commands += sizeof(char);
@@ -233,7 +257,7 @@ int PushCase (void* code, int* num_of_commands, int scan_case, data_t cons, char
         *((char *) code + *num_of_commands) = (char) (CMD_PUSH | ARG_REG);
         *num_of_commands += sizeof(char);
 
-        if (reg - 'a' < 0 || reg - 'a' > 3)
+        if (reg - 'a' < 0 || reg - 'a' > 7)
             return WRONG_REGISTER;
         *((char *) code + *num_of_commands) = (char)(reg - 'a');
         *num_of_commands += sizeof(char);
@@ -270,7 +294,7 @@ int PopCase (void* code, int* num_of_commands, int scan_case, data_t cons, char 
         *(data_t*)((char*)code + *num_of_commands) = cons;
         *num_of_commands += sizeof(data_t);
 
-        if (reg - 'a' < 0 || reg - 'a' > 3)
+        if (reg - 'a' < 0 || reg - 'a' > 7)
             return WRONG_REGISTER;
         *((char *) code + *num_of_commands) = (char)(reg - 'a');
         *num_of_commands += sizeof(char);
@@ -280,7 +304,7 @@ int PopCase (void* code, int* num_of_commands, int scan_case, data_t cons, char 
         *((char *) code + *num_of_commands) = (char) (CMD_POP | ARG_REG | ARG_RAM);
         *num_of_commands += sizeof(char);
 
-        if (reg - 'a' < 0 || reg - 'a' > 3)
+        if (reg - 'a' < 0 || reg - 'a' > 7)
             return WRONG_REGISTER;
         *((char *) code + *num_of_commands) = (char)(reg - 'a');
         *num_of_commands += sizeof(char);
@@ -290,7 +314,7 @@ int PopCase (void* code, int* num_of_commands, int scan_case, data_t cons, char 
         *((char *) code + *num_of_commands) = (char) (CMD_POP | ARG_REG);
         *num_of_commands += sizeof(char);
 
-        if (reg - 'a' < 0 || reg - 'a' > 3)
+        if (reg - 'a' < 0 || reg - 'a' > 7)
             return WRONG_REGISTER;
         *((char *) code + *num_of_commands) = (char)(reg - 'a');
         *num_of_commands += sizeof(char);
@@ -335,6 +359,12 @@ int NoArgsCommands (void* code, int* num_of_commands, char* command)
         *((char*)code + *num_of_commands) = (char)CMD_DIV;
         *num_of_commands += sizeof(char);
     }
+        //sqrt
+    else if(strcmp("sqrt", command) == 0)
+    {
+        *((char*)code + *num_of_commands) = (char)CMD_SQRT;
+        *num_of_commands += sizeof(char);
+    }
         //out
     else if(strcmp("out", command) == 0)
     {
@@ -365,6 +395,8 @@ int NoArgsCommands (void* code, int* num_of_commands, char* command)
         *((char*)code + *num_of_commands) = (char)CMD_HLT;
         *num_of_commands += sizeof(char);
     }
+    else
+        return SYNTAX_ERROR;
 
     return 0;
 }
@@ -413,25 +445,4 @@ int JumpCommand (void* code, int* num_of_commands, char* command)
     }
 
     return 0;
-}
-
-int MakeBinaryFile (void* code, int sizeof_code, const char* file_name)
-{
-	FILE* file_ptr = nullptr;
-
-	file_ptr = fopen(file_name, "wb");
-
-	if (file_ptr == nullptr)
-    {
-        printf("In Function MakeBinaryFile: Can't open file\n");
-        return CANT_OPEN_FILE;
-    }
-
-	if (fwrite(code, sizeof(char), sizeof_code, file_ptr) != sizeof_code)
-    {
-        printf("In Function MakeBinaryFile: Wrong write of code\n");
-        return WRONG_WRITE_TO_FILE;
-    }
-
-	return 0;
 }

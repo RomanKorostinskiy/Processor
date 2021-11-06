@@ -111,4 +111,4 @@ int NoArgsCommands (void* code, int* num_of_commands, char* command);
 
 int JumpCommand (void* code, int* num_of_commands, char* command);
 
-int MakeBinaryFile (void* code, int sizeof_code, const char* file_name);
+int MakeBinaryFile (void* code, size_t sizeof_code, const char* file_name);

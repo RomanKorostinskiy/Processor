@@ -1,4 +1,4 @@
-#include "../include/Assembler.h"
+#include "../include/OneginSort.h"
 
 int GetFileNames (Text *text, int argc, char* argv[])
 {
@@ -22,7 +22,7 @@ int ReadFromFile (Text *text)
 
 	if (fp == nullptr)
     {
-        printf("Wrong input file\n");
+        printf("Wrong input file");
         return WRONG_INPUT_FILE;
     }
 

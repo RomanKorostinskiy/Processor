@@ -1,0 +1,99 @@
+in
+pop ax	;a
+in
+pop bx	;b
+in
+pop cx	;c
+
+call Discr
+
+push dx		;st: d
+push 0		;st: d 0
+jb no_roots
+je one_root
+ja two_roots
+pop			;st: d
+pop			;st:
+
+:no_roots
+call NoRoots
+jmp end
+
+:one_root
+call OneRoot
+jmp end
+
+:two_roots
+call TwoRoots
+jmp end
+
+:end
+hlt
+
+
+
+:Discr
+push bx
+push bx
+mul
+push 4
+push ax
+push cx
+mul
+mul
+sub
+pop dx
+ret
+
+
+:NoRoots
+push -1
+out
+ret
+
+
+:OneRoot
+push 1
+out
+
+push bx
+push -1
+mul 	;st: -b
+push 2	;st: -b 2
+div		;st: -b/2
+push ax	;st: -b/2 a
+div		;st: -b/(2a)
+out
+ret
+
+
+:TwoRoots
+push 2
+out
+
+push dx
+sqrt
+pop dx	;dx = sqrt(d)
+
+push bx	; +
+push -1
+mul 	;st: -b
+push dx ;st: -b sqrt(d)
+add		;st: -b+sqrt(d)
+push 2 	;st: -b+sqrt(d) 2
+div		;st: (-b+sqrt(d))/2
+push ax	;st: (-b+sqrt(d))/2 a
+div		;st: (-b+sqrt(d))/(2a)
+out
+
+push bx	; +
+push -1
+mul 	;st: -b
+push dx ;st: -b sqrt(d)
+sub		;st: -b-sqrt(d)
+push 2 	;st: -b-sqrt(d) 2
+div		;st: (-b-sqrt(d))/2
+push ax	;st: (-b-sqrt(d))/2 a
+div		;st: (-b-sqrt(d))/(2a)
+out
+ret

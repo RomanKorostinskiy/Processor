@@ -1,0 +1,4 @@
+jmp tag
+
+:tag
+hlt

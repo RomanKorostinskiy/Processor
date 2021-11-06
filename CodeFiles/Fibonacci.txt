@@ -1,0 +1,70 @@
+in
+pop ax
+
+push ax		;st: ax
+push 1		;st: ax 0
+jb wrong_in
+pop			;st: ax
+pop			;st:
+
+call Fib
+jmp end
+
+:wrong_in
+push -1
+out
+hlt
+
+:end
+push cx
+out
+hlt
+
+
+
+:Fib
+push ax		;st ax
+
+push 1		;st ax 1
+jbe null
+pop			;st ax
+
+push 2		;st ax 1
+jbe one
+pop			;st ax
+
+push 1
+sub
+pop ax		;ax = ax -1
+
+call Fib
+
+push cx		;st cx
+pop dx		;dx = cx
+
+push bx		;st dx
+push cx		;st bx cx
+add			;st bx+cx
+push dx		;st bx+cx dx
+pop bx		;bx = dx;	st bx+cx
+pop cx		;cx = bx+cx
+
+ret
+
+:one
+pop
+push 1
+pop cx
+push 0
+pop bx
+pop ax
+ret
+
+:null
+pop
+push 0
+pop cx
+push 0
+pop bx
+pop ax
+ret

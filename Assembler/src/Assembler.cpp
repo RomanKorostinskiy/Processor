@@ -18,8 +18,12 @@ int main(int argc, char* argv[])
 
 	MakeString(&input_text);
 
-    Assembler(&input_text, code); //TODO как лучше сделать второй прогон ассемблера
-	size_t sizeof_code = Assembler(&input_text, code);
+    size_t sizeof_code;
+
+    for (int i = 0; i < 2; i++)
+    {
+        sizeof_code = Assembler(&input_text, code);
+    }
 
     printf("\n%ld\n", sizeof_code); //
 

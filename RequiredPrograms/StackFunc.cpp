@@ -1,4 +1,4 @@
-#include "../include/Processor.h"
+#include "../include/Stack.h"
 
 const int    START_CAPACITY  = 1;
 const int    CAPACITY_STEP   = 2;
@@ -131,10 +131,12 @@ data_t* StackResize (Stack* stack)
         new_adress = (data_t*) realloc(stack->data,
                                        stack->capacity * sizeof(data_t) + 2 * sizeof(canary_t));
 
+        //TODO memset realloc +
 
         ((canary_t*)new_adress)[0] = CANARY_CONSTANT;
 
         new_adress = (data_t*)((canary_t*)new_adress + 1);
+        //TODO
 
         *(canary_t*)(new_adress + stack->capacity) = CANARY_CONSTANT;
 #else
@@ -157,6 +159,7 @@ data_t* StackResize (Stack* stack)
         ((canary_t*)new_adress)[0] = CANARY_CONSTANT;
 
         new_adress = (data_t*)((canary_t*)new_adress + 1);
+        //TODO
 
         *(canary_t*)(new_adress + stack->capacity) = CANARY_CONSTANT;
 #else

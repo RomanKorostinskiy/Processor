@@ -54,7 +54,7 @@ typedef struct Processor_t
 {
     Stack stack = {};
 
-    data_t REGS[4] = {0};
+    data_t REGS[8] = {0};
 
     data_t RAM[RAM_SIZE] = {0};
 

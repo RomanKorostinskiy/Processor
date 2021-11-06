@@ -145,6 +145,19 @@ int Processor (Processor_t* processor)
                 processor->ip += sizeof(char);
                 break;
 
+            case CMD_SQRT:
+                var1 = StackPop(&processor->stack);
+
+                if (var1 < 0)
+                {
+                    printf("Сan't take the sqrt of a negative number\n");
+                    return WRONG_DATA;
+                }
+
+                StackPush(&processor->stack, sqrt(var1));
+                processor->ip += sizeof(char);
+                break;
+
             case CMD_OUT:
                 printf("out: %lf\n", StackPop(&processor->stack));
                 processor->ip += sizeof(char);
