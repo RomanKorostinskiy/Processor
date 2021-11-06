@@ -12,12 +12,12 @@ CMD_POP|ARG_REG dec:                  66     CMD_POP|ARG_REG hex:               
 CMD_POP|ARG_REG|ARG_RAM dec:          194    CMD_POP|ARG_REG|ARG_RAM hex:           c2
 CMD_POP|ARG_REG|ARG_CONS|ARG_RAM dec: 226    CMD_POP|ARG_REG|ARG_CONS|ARG_RAM  hex: e2
 
-CMD_JMP dec:  9      CMD_JMP hex:  9
-CMD_JA dec:   10     CMD_JA hex:   a
-CMD_JAE dec:  11     CMD_JAE hex:  b
-CMD_JB dec:   12     CMD_JB hex:   c
-CMD_JBE dec:  13     CMD_JBE hex:  d
-CMD_JE dec:   14     CMD_JE hex:   e
-CMD_JNE dec:  15     CMD_JNE hex:  f
-CMD_CALL dec: 16     CMD_CALL hex: 10
-CMD_RET dec:  17     CMD_RET hex:  11
+CMD_JMP dec:  10      CMD_JMP hex:  a
+CMD_JA dec:   11     CMD_JA hex:   b
+CMD_JAE dec:  12     CMD_JAE hex:  c
+CMD_JB dec:   13     CMD_JB hex:   d
+CMD_JBE dec:  14     CMD_JBE hex:  e
+CMD_JE dec:   15     CMD_JE hex:   f
+CMD_JNE dec:  16     CMD_JNE hex:  10
+CMD_CALL dec: 17     CMD_CALL hex: 11
+CMD_RET dec:  18     CMD_RET hex:  12

@@ -22,11 +22,11 @@ ctype.h
 math.h
 -
 
-../include/Assembler.h
+/home/roman/CS/C/Huawei/Processor/Disassembler/include/Disasm.h
 ../GeneralInclude/General.h
-../GeneralInclude/General.h
+/home/roman/CS/C/Huawei/Processor/Disassembler/GeneralInclude/General.h
 
-/home/roman/CS/C/Huawei/Processor/RequiredPrograms/MakeStringFunc.cpp
-../include/Assembler.h
-/home/roman/CS/C/Huawei/Processor/include/Assembler.h
+/home/roman/CS/C/Huawei/Processor/Disassembler/src/DisasmFunc.cpp
+../include/Disasm.h
+/home/roman/CS/C/Huawei/Processor/Disassembler/include/Disasm.h
 

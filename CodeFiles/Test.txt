@@ -1,4 +1,5 @@
-jmp tag
-
-:tag
-hlt
+push 4
+push ax
+push [4]
+push [ax]
+push [4 + ax]

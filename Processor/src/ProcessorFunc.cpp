@@ -277,6 +277,7 @@ int Processor (Processor_t* processor)
                 break;
 
             case CMD_HLT:
+                processor->ip = 0;
                 return 0;
 
             default:
