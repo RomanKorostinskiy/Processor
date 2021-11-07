@@ -1,1 +1,0 @@
-/usr/bin/c++ -g CMakeFiles/CommandsTable.dir/table.cpp.o -o CommandsTable 

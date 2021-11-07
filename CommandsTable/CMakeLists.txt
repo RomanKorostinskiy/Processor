@@ -4,5 +4,5 @@ project(CommandsTable)
 set(CMAKE_CXX_STANDARD 14)
 
 add_executable(CommandsTable
-        table.cpp
+        Table.cpp
         ../GeneralInclude/General.h)

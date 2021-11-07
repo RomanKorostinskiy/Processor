@@ -1,1 +1,0 @@
-/usr/bin/c++ -g CMakeFiles/Assembler.dir/src/Assembler.cpp.o CMakeFiles/Assembler.dir/src/AssemblerFunc.cpp.o CMakeFiles/Assembler.dir/home/roman/CS/C/Huawei/Processor/RequiredPrograms/MakeStringFunc.cpp.o -o Assembler 

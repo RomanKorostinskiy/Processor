@@ -81,32 +81,33 @@ int Disassembler (Disasm* disasm)
                 disasm->ip += sizeof(char);
                 PrintPush(disasm, disasm_file_ptr, type);
                 break;
+        }
 
-            case CMD_POP:
-                disasm->ip += sizeof(char);
-
-                if(type == 0)
-                    StackPop(&processor->stack);
-                else if((type & ARG_RAM) == 0 && (type & ARG_REG) != 0 )
-                {
-                    processor->REGS[*(char*)((char*)processor->code + processor->ip)] = StackPop(&processor->stack);
-                    processor->ip += sizeof(char);
-                }
-                else if((type & ARG_RAM) != 0)
-                {
-                    if((type & ARG_CONS) != 0)
-                    {
-                        arg += *(data_t*)((char*)processor->code + processor->ip);
-                        processor->ip += sizeof(data_t);
-                    }
-                    if((type & ARG_REG) != 0)
-                    {
-                        arg += processor->REGS[*(char*)((char*)processor->code + processor->ip)];
-                        processor->ip += sizeof(char);
-                    }
-
-                    processor->RAM[(int)arg] = StackPop(&processor->stack);
-                }
+//            case CMD_POP:
+//                disasm->ip += sizeof(char);
+//
+//                if(type == 0)
+//                    StackPop(&processor->stack);
+//                else if((type & ARG_RAM) == 0 && (type & ARG_REG) != 0 )
+//                {
+//                    processor->REGS[*(char*)((char*)processor->code + processor->ip)] = StackPop(&processor->stack);
+//                    processor->ip += sizeof(char);
+//                }
+//                else if((type & ARG_RAM) != 0)
+//                {
+//                    if((type & ARG_CONS) != 0)
+//                    {
+//                        arg += *(data_t*)((char*)processor->code + processor->ip);
+//                        processor->ip += sizeof(data_t);
+//                    }
+//                    if((type & ARG_REG) != 0)
+//                    {
+//                        arg += processor->REGS[*(char*)((char*)processor->code + processor->ip)];
+//                        processor->ip += sizeof(char);
+//                    }
+//
+//                    processor->RAM[(int)arg] = StackPop(&processor->stack);
+//                }
 
                 break;
 //

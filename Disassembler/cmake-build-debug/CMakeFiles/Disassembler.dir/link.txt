@@ -1,1 +1,0 @@
-/usr/bin/c++ -g CMakeFiles/Disassembler.dir/src/Disasm.cpp.o CMakeFiles/Disassembler.dir/src/DisasmFunc.cpp.o -o Disassembler 
