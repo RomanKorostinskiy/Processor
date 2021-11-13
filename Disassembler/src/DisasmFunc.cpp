@@ -184,7 +184,7 @@ int PrintPop (Disasm* disasm, FILE* fp, int type)
             disasm->ip += sizeof(char);
             break;
 
-        case NO_ARGS:
+        case ARGS_NO:
             fprintf(fp, "pop\n");
             break;
 

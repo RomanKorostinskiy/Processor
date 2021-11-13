@@ -1,4 +1,4 @@
-#include "../include/Stack.h"
+#include "../include/Processor.h"
 
 const int    START_CAPACITY  = 1;
 const int    CAPACITY_STEP   = 2;

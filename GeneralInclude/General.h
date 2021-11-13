@@ -47,7 +47,7 @@ enum Arguments
     ARG_CONS  = 32,
     ARG_REG   = 64,
     ARG_RAM   = 128,
-    NO_ARGS   = 0,
+    ARGS_NO   = 0,
 };
 
 const size_t RAM_SIZE = 1024;
