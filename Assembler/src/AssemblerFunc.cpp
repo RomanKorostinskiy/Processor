@@ -18,6 +18,8 @@ int MakeBinaryFile (void* code, size_t sizeof_code, const char* file_name)
         return WRONG_WRITE_TO_FILE;
     }
 
+    fclose(file_ptr);
+
     return 0;
 }
 
@@ -75,7 +77,7 @@ size_t Assembler (Text* input, void* code)
             {
                 tag_table[num_of_tags].adr = num_of_commands;
 
-                size_t tag_len = strlen(tag_name);
+                size_t tag_len = strlen(tag_name) + 1;
                 tag_table[num_of_tags].name = (char *) calloc(tag_len, sizeof(char));
                 memcpy(tag_table[num_of_tags].name, tag_name, tag_len);
 
