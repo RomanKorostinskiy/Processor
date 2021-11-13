@@ -57,7 +57,10 @@ FILE* OpenDisasmFile (char* file_name)
     FILE* fp = fopen(file_name, "w");
 
     if (!fp)
+    {
+        printf("In Function OpenDisasmFile: Can't open a file");
         return nullptr;
+    }
 
     return fp;
 }
@@ -70,10 +73,10 @@ int Disassembler (Disasm* disasm)
     {
         data_t var1 = 0;
         data_t var2 = 0;
-        data_t arg  = 0;
+        data_t arg = 0;
 
-        int cmd = *((char*)disasm->code + disasm->ip) & 0x1F;
-        int type = *((char*)disasm->code + disasm->ip) & 0xE0;
+        int cmd = *((char *) disasm->code + disasm->ip) & 0x1F;
+        int type = *((char *) disasm->code + disasm->ip) & 0xE0;
 
         switch (cmd)
         {
@@ -81,207 +84,28 @@ int Disassembler (Disasm* disasm)
                 disasm->ip += sizeof(char);
                 PrintPush(disasm, disasm_file_ptr, type);
                 break;
-        }
 
-//            case CMD_POP:
-//                disasm->ip += sizeof(char);
-//
-//                if(type == 0)
-//                    StackPop(&processor->stack);
-//                else if((type & ARG_RAM) == 0 && (type & ARG_REG) != 0 )
-//                {
-//                    processor->REGS[*(char*)((char*)processor->code + processor->ip)] = StackPop(&processor->stack);
-//                    processor->ip += sizeof(char);
-//                }
-//                else if((type & ARG_RAM) != 0)
-//                {
-//                    if((type & ARG_CONS) != 0)
-//                    {
-//                        arg += *(data_t*)((char*)processor->code + processor->ip);
-//                        processor->ip += sizeof(data_t);
-//                    }
-//                    if((type & ARG_REG) != 0)
-//                    {
-//                        arg += processor->REGS[*(char*)((char*)processor->code + processor->ip)];
-//                        processor->ip += sizeof(char);
-//                    }
-//
-//                    processor->RAM[(int)arg] = StackPop(&processor->stack);
-//                }
-//                break;
-//
-//            case CMD_ADD:
-//                StackPush(&processor->stack,
-//                          StackPop(&processor->stack) + StackPop(&processor->stack));
-//                processor->ip += sizeof(char);
-//                break;
-//
-//            case CMD_SUB:
-//                var2 = StackPop(&processor->stack);
-//                var1 = StackPop(&processor->stack);
-//
-//                StackPush(&processor->stack, var1 - var2);
-//                processor->ip += sizeof(char);
-//                break;
-//
-//            case CMD_MUL:
-//                StackPush(&processor->stack,
-//                          StackPop(&processor->stack) * StackPop(&processor->stack));
-//                processor->ip += sizeof(char);
-//                break;
-//
-//            case CMD_DIV:
-//                var2 = StackPop(&processor->stack);
-//                var1 = StackPop(&processor->stack);
-//
-//                if (IsZero(var2))
-//                {
-//                    printf("Сan't divide by zero\n");
-//                    return WRONG_DATA;
-//                }
-//
-//                StackPush(&processor->stack, var1 / var2);
-//                processor->ip += sizeof(char);
-//                break;
-//
-//            case CMD_SQRT:
-//                var1 = StackPop(&processor->stack);
-//
-//                if (var1 < 0)
-//                {
-//                    printf("Сan't take the sqrt of a negative number\n");
-//                    return WRONG_DATA;
-//                }
-//
-//                StackPush(&processor->stack, sqrt(var1));
-//                processor->ip += sizeof(char);
-//                break;
-//
-//            case CMD_OUT:
-//                printf("out: %lf\n", StackPop(&processor->stack));
-//                processor->ip += sizeof(char);
-//                break;
-//
-//            case CMD_IN:
-//                scanf("%lf", &var1);
-//                StackPush(&processor->stack, var1);
-//                processor->ip += sizeof(char);
-//                break;
-//
-//            case CMD_JMP:
-//                processor->ip += sizeof(char);
-//
-//                processor->ip = *(size_t*)((char*)processor->code + processor->ip);
-//                break;
-//
-//            case CMD_JA:
-//                var2 = StackPop(&processor->stack);
-//                var1 = StackPop(&processor->stack);
-//
-//                processor->ip += sizeof(char);
-//
-//                if (var1 > var2)
-//                    processor->ip = *(size_t*)((char *) processor->code + processor->ip);
-//                else
-//                    processor->ip += sizeof(size_t);
-//
-//                StackPush(&processor->stack, var1);
-//                StackPush(&processor->stack, var2);
-//                break;
-//
-//            case CMD_JAE:
-//                var2 = StackPop(&processor->stack);
-//                var1 = StackPop(&processor->stack);
-//
-//                processor->ip += sizeof(char);
-//
-//                if (var1 >= var2)
-//                    processor->ip = *(size_t*)((char *) processor->code + processor->ip);
-//                else
-//                    processor->ip += sizeof(size_t);
-//
-//                StackPush(&processor->stack, var1);
-//                StackPush(&processor->stack, var2);
-//                break;
-//
-//            case CMD_JB:
-//                var2 = StackPop(&processor->stack);
-//                var1 = StackPop(&processor->stack);
-//
-//                processor->ip += sizeof(char);
-//
-//                if (var1 < var2)
-//                    processor->ip = *(size_t*)((char *) processor->code + processor->ip);
-//                else
-//                    processor->ip += sizeof(size_t);
-//
-//                StackPush(&processor->stack, var1);
-//                StackPush(&processor->stack, var2);
-//                break;
-//
-//            case CMD_JBE:
-//                var2 = StackPop(&processor->stack);
-//                var1 = StackPop(&processor->stack);
-//
-//                processor->ip += sizeof(char);
-//
-//                if (var1 <= var2)
-//                    processor->ip = *(size_t*)((char *) processor->code + processor->ip);
-//                else
-//                    processor->ip += sizeof(size_t);
-//
-//                StackPush(&processor->stack, var1);
-//                StackPush(&processor->stack, var2);
-//                break;
-//
-//            case CMD_JE:
-//                var2 = StackPop(&processor->stack);
-//                var1 = StackPop(&processor->stack);
-//
-//                processor->ip += sizeof(char);
-//
-//                if (IsEqual(var1, var2))
-//                    processor->ip = *(size_t*)((char *) processor->code + processor->ip);
-//                else
-//                    processor->ip += sizeof(size_t);
-//
-//                StackPush(&processor->stack, var1);
-//                StackPush(&processor->stack, var2);
-//                break;
-//
-//            case CMD_JNE:
-//                var2 = StackPop(&processor->stack);
-//                var1 = StackPop(&processor->stack);
-//
-//                processor->ip += sizeof(char);
-//
-//                if (!IsEqual(var1, var2))
-//                    processor->ip = *(size_t*)((char *) processor->code + processor->ip);
-//                else
-//                    processor->ip += sizeof(size_t);
-//
-//                StackPush(&processor->stack, var1);
-//                StackPush(&processor->stack, var2);
-//                break;
-//
-//            case CMD_CALL:
-//                processor->ip += sizeof(char);
-//                StackPush(&processor->stack, (data_t)(processor->ip + sizeof(size_t))); //TODO
-//
-//                processor->ip = *(size_t*)((char*)processor->code + processor->ip);
-//                break;
-//
-//            case CMD_RET:
-//                processor->ip = (size_t)StackPop(&processor->stack);
-//                break;
-//
-//            case CMD_HLT:
-//                return 0;
-//
-//            default:
-//                printf("In Function Processor: Default case is reached\n");
-//                return PROCESSOR_DEFAULT_CASE;
+            case CMD_POP:
+                disasm->ip += sizeof(char);
+                PrintPop(disasm, disasm_file_ptr, type);
+                break;
+
+            case CMD_ADD:  case CMD_SUB: case CMD_MUL: case CMD_DIV:
+            case CMD_SQRT: case CMD_OUT: case CMD_IN:  case CMD_RET:
+            case CMD_HLT:
+                PrintNoArgsCommands(disasm, disasm_file_ptr, cmd);
+                break;
+
+            case CMD_JMP: case CMD_JA: case CMD_JAE: case CMD_JB:
+            case CMD_JBE: case CMD_JE: case CMD_JNE: case CMD_CALL:
+                PrintJumpCommands(disasm, disasm_file_ptr, cmd);
+                break;
+
+            default:
+                printf("In Function Disassembler: default case is reached\n");
+                return DISASSEMBLER_DEFAULT_CASE;
         }
+    }
 
     fclose(disasm_file_ptr);
 
@@ -298,7 +122,14 @@ int PrintPush (Disasm* disasm, FILE* fp, int type)
             break;
 
         case ARG_REG:
-            fprintf(fp, "push %cx\n", *(char*)((char*)disasm->code + disasm->ip));
+            fprintf(fp, "push %cx\n", *(char*)((char*)disasm->code + disasm->ip) + 'a');
+            disasm->ip += sizeof(char);
+            break;
+
+        case ARG_CONS | ARG_REG:
+            fprintf(fp, "push %0.f + %cx\n", *(data_t*)((char*)disasm->code + disasm->ip),
+                    *(char*)((char*)disasm->code + disasm->ip + sizeof(data_t)) + 'a');
+            disasm->ip += sizeof(data_t);
             disasm->ip += sizeof(char);
             break;
 
@@ -320,11 +151,172 @@ int PrintPush (Disasm* disasm, FILE* fp, int type)
             break;
 
         default:
-            printf("In Function Disassembler: default case is reached\n");
+            printf("In Function PrintPush: default case is reached\n");
             return DISASSEMBLER_DEFAULT_CASE;
     }
 
     return 0;
 }
 
-//PrintPop(disasm, disasm_file_ptr, type)
+int PrintPop (Disasm* disasm, FILE* fp, int type)
+{
+    switch (type)
+    {
+        case ARG_REG:
+            fprintf(fp, "pop %cx\n", *(char*)((char*)disasm->code + disasm->ip) + 'a');
+            disasm->ip += sizeof(char);
+            break;
+
+        case ARG_RAM | ARG_CONS:
+            fprintf(fp, "pop [%0.f]\n", *(data_t*)((char*)disasm->code + disasm->ip));
+            disasm->ip += sizeof(data_t);
+            break;
+
+        case ARG_RAM | ARG_REG:
+            fprintf(fp, "pop [%cx]\n", *(char*)((char*)disasm->code + disasm->ip) + 'a');
+            disasm->ip += sizeof(char);
+            break;
+
+        case ARG_RAM | ARG_CONS | ARG_REG:
+            fprintf(fp, "pop [%0.f + %cx]\n", *(data_t*)((char*)disasm->code + disasm->ip),
+                    *(char*)((char*)disasm->code + disasm->ip + sizeof(data_t)) + 'a');
+            disasm->ip += sizeof(data_t);
+            disasm->ip += sizeof(char);
+            break;
+
+        case NO_ARGS:
+            fprintf(fp, "pop\n");
+            break;
+
+        default:
+            printf("In Function PrintPop: default case is reached\n");
+            return DISASSEMBLER_DEFAULT_CASE;
+    }
+
+    return 0;
+}
+
+int PrintNoArgsCommands (Disasm* disasm, FILE* fp, int cmd)
+{
+    switch (cmd)
+    {
+        case CMD_ADD:
+            fprintf(fp, "add\n");
+            disasm->ip += sizeof(char);
+            break;
+
+        case CMD_SUB:
+            fprintf(fp, "sub\n");
+            disasm->ip += sizeof(char);
+            break;
+
+        case CMD_MUL:
+            fprintf(fp, "mul\n");
+            disasm->ip += sizeof(char);
+            break;
+
+        case CMD_DIV:
+            fprintf(fp, "div\n");
+            disasm->ip += sizeof(char);
+            break;
+
+        case CMD_SQRT:
+            fprintf(fp, "sqrt\n");
+            disasm->ip += sizeof(char);
+            break;
+
+        case CMD_OUT:
+            fprintf(fp, "out\n");
+            disasm->ip += sizeof(char);
+            break;
+
+        case CMD_IN:
+            fprintf(fp, "in\n");
+            disasm->ip += sizeof(char);
+            break;
+
+        case CMD_RET:
+            fprintf(fp, "ret\n");
+            disasm->ip += sizeof(char);
+            break;
+
+        case CMD_HLT:
+            fprintf(fp, "hlt\n");
+            disasm->ip += sizeof(char);
+            break;
+
+        default:
+            printf("In Function PrintNoArgsCommands: default case is reached\n");
+            return DISASSEMBLER_DEFAULT_CASE;
+    }
+
+    return 0;
+}
+
+int PrintJumpCommands (Disasm* disasm, FILE* fp, int cmd)
+{
+    switch (cmd)
+    {
+        case CMD_JMP:
+            fprintf(fp, "jmp ");
+            disasm->ip += sizeof(char);
+            fprintf(fp, "%ld\n", *(size_t*)((char*)disasm->code + disasm->ip));
+            disasm->ip += sizeof(size_t);
+            break;
+
+        case CMD_JA:
+            fprintf(fp, "ja ");
+            disasm->ip += sizeof(char);
+            fprintf(fp, "%ld\n", *(size_t*)((char*)disasm->code + disasm->ip));
+            disasm->ip += sizeof(size_t);
+            break;
+
+        case CMD_JAE:
+            fprintf(fp, "jae ");
+            disasm->ip += sizeof(char);
+            fprintf(fp, "%ld\n", *(size_t*)((char*)disasm->code + disasm->ip));
+            disasm->ip += sizeof(size_t);
+            break;
+
+        case CMD_JB:
+            fprintf(fp, "jb ");
+            disasm->ip += sizeof(char);
+            fprintf(fp, "%ld\n", *(size_t*)((char*)disasm->code + disasm->ip));
+            disasm->ip += sizeof(size_t);
+            break;
+
+        case CMD_JBE:
+            fprintf(fp, "jbe ");
+            disasm->ip += sizeof(char);
+            fprintf(fp, "%ld\n", *(size_t*)((char*)disasm->code + disasm->ip));
+            disasm->ip += sizeof(size_t);
+            break;
+
+        case CMD_JE:
+            fprintf(fp, "je");
+            disasm->ip += sizeof(char);
+            fprintf(fp, "%ld\n", *(size_t*)((char*)disasm->code + disasm->ip));
+            disasm->ip += sizeof(size_t);
+            break;
+
+        case CMD_JNE:
+            fprintf(fp, "jne ");
+            disasm->ip += sizeof(char);
+            fprintf(fp, "%ld\n", *(size_t*)((char*)disasm->code + disasm->ip));
+            disasm->ip += sizeof(size_t);
+            break;
+
+        case CMD_CALL:
+            fprintf(fp, "call ");
+            disasm->ip += sizeof(char);
+            fprintf(fp, "%ld\n", *(size_t*)((char*)disasm->code + disasm->ip));
+            disasm->ip += sizeof(size_t);
+            break;
+
+        default:
+            printf("In Function PrintJumpCommands: default case is reached\n");
+            return DISASSEMBLER_DEFAULT_CASE;
+    }
+
+    return 0;
+}

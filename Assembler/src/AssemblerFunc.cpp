@@ -111,7 +111,7 @@ size_t Assembler (Text* input, void* code)
                 }
                 else if (asm_call_num > 1)
                 {
-                    printf("In Function Assembler: Wrong Call argument at line %ld", line);
+                    printf("In Function Assembler: Wrong Call/Jump argument at line %ld", line);
                     return CALL_ARGS_ERROR;
                 }
             }

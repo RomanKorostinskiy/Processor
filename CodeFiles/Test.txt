@@ -1,5 +1,32 @@
+:end
 push 4
-push ax
+push cx
+
 push [4]
-push [ax]
-push [4 + ax]
+push [bx] ; comment
+
+push 4 + ex
+
+push [4 + ex]
+
+
+
+pop fx
+pop [cx]
+
+pop [5 + cx]
+
+pop [7]
+
+add
+sub
+mul
+div
+sqrt
+in
+out
+ret
+
+jmp end
+
+push 1

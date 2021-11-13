@@ -1,0 +1,49 @@
+in
+pop ax
+push ax
+push 1
+jb 43
+pop
+pop
+call 58
+jmp 54
+push -1
+out
+hlt
+push cx
+out
+hlt
+push ax
+push 1
+jbe 161
+pop
+push 2
+jbe 135
+pop
+push 1
+sub
+pop ax
+call 58
+push cx
+pop dx
+push bx
+push cx
+add
+push dx
+pop bx
+pop cx
+ret
+pop
+push 1
+pop cx
+push 0
+pop bx
+pop ax
+ret
+pop
+push 0
+pop cx
+push 0
+pop bx
+pop ax
+ret

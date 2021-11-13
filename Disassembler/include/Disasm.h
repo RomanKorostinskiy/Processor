@@ -31,3 +31,9 @@ int Disassembler (Disasm* disasm);
 
 int PrintPush (Disasm* disasm, FILE* fp, int type);
 
+int PrintPop (Disasm* disasm, FILE* fp, int type);
+
+int PrintNoArgsCommands (Disasm* disasm, FILE* fp, int cmd);
+
+int PrintJumpCommands (Disasm* disasm, FILE* fp, int cmd);
+
