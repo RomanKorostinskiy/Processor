@@ -108,7 +108,6 @@ int Processor (Processor_t* processor)
 
                     processor->RAM[(int)arg] = StackPop(&processor->stack);
                 }
-
                 break;
 
             case CMD_ADD:

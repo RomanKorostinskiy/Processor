@@ -108,8 +108,7 @@ int Disassembler (Disasm* disasm)
 //
 //                    processor->RAM[(int)arg] = StackPop(&processor->stack);
 //                }
-
-                break;
+//                break;
 //
 //            case CMD_ADD:
 //                StackPush(&processor->stack,
