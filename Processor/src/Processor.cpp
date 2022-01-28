@@ -15,12 +15,12 @@ int main(int argc, char* argv[])
 
     GetCode (&processor, code_file_name);
 
-    for (int i = 0; i < processor.sizeof_code; i++)
-    {
-        printf("\n%x", *((char*)processor.code + i));
-    }
-
-    printf("\nsizeof code = %ld\n", processor.sizeof_code);
+//    for (int i = 0; i < processor.sizeof_code; i++) //Тестовые распечатки
+//    {
+//        printf("\n%x", *((char*)processor.code + i));
+//    }
+//
+//    printf("\nsizeof code = %ld\n", processor.sizeof_code);
 
     Processor (&processor);
 

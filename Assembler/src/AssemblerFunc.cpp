@@ -91,7 +91,7 @@ size_t Assembler (Text* input, void* code)
 
             while(num_of_tags > 0 && tag_place < num_of_tags)
             {
-                if (strcmp(tag_name, tag_table[tag_place].name) == 0) //TODO валгринд ругается на strcmp
+                if (strcmp(tag_name, tag_table[tag_place].name) == 0)
                     break;
 
                 tag_place++;
@@ -180,7 +180,7 @@ int ScanCommand(char* string, char* command, char* tag_name, data_t* cons, char*
 
     char* comment_place = nullptr;
 
-    if ((comment_place = strchr(string, ';')) != nullptr) //TODO строка add\t считывается как add, хотя массив команд на 4 символа, почему?
+    if ((comment_place = strchr(string, ';')) != nullptr)
         *comment_place = '\0';
 
     if (sscanf(string, "%s [%lf + %cx%n]", command, cons, reg, &scan_ok) == 3

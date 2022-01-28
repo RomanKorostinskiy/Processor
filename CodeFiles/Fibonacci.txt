@@ -20,8 +20,6 @@ push cx
 out
 hlt
 
-
-
 :Fib
 push ax		;st ax
 

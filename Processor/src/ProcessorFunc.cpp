@@ -20,9 +20,9 @@ size_t GetSizeOfFile (FILE* fp)
         return 0;
     }
 
-    fseek(fp, 0, SEEK_END); //переводим указатель на конец файла
-    size_t size_of_file = ftell(fp); //считаем количество байт на которое указатель отстоит от начала файла
-    rewind(fp); //возвращает указатель на начало файла
+    fseek(fp, 0, SEEK_END);
+    size_t size_of_file = ftell(fp);
+    rewind(fp);
 
     return size_of_file;
 }

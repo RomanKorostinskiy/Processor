@@ -83,18 +83,6 @@ size_t DeleteSpaces (char *array);
 
 void MemoryFree (Text *text);
 
-int AlphabetOrderCMP (const void *arg1, const void *arg2);
-
-void AlphabetOrderSort(Text *text);
-
-int RhymeCMP (const void *arg1, const void *arg2);
-
-void RhymeSort (Text *text);
-
-int OriginalCMP (const void *arg1, const void *arg2);
-
-void OriginalSort (Text *text);
-
 int GetFileNames (Text *text, int argc, char* argv[]);
 
 //-------- Assembler functions ---------

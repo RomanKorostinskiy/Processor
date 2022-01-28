@@ -2,15 +2,15 @@
 
 int GetFileNames (Text *text, int argc, char* argv[])
 {
-    if (argc == 3)
-    {
+    if (argc == 3) {
         text->input_file_name = argv[1];
         text->output_file_name = argv[2];
 
         return 0;
-    }
-    else
+    } else {
+        printf("In function GetSaveFileName: wrong arguments\n");
         return 1;
+    }
 }
 
 int ReadFromFile (Text *text)
@@ -51,9 +51,9 @@ FILE* OpenFileWrite (Text* text)
 
 size_t GetSizeOfFile (FILE* fp)
 {
-	fseek(fp, 0, SEEK_END); //переводим указатель на конец файла
-	size_t size_of_file = ftell(fp); //считаем количество байт на которое указатель отстоит от начала файла
-	rewind(fp); //возвращает указатель на начало файла
+	fseek(fp, 0, SEEK_END);
+	size_t size_of_file = ftell(fp);
+	rewind(fp);
 
 	return size_of_file + 1;
 }
@@ -112,36 +112,32 @@ size_t DeleteSpaces (char *array)
 	int is_newline = true;
 	int is_space = true;
 	int num_of_strings = 0;
-	for (i = 0, j = 0; array[i] != EOF; i++)
-	{
-		if (array[i] == '\n')
-		{
-			if(!is_newline && array[i + 1] != '\n' && array[i + 1] != EOF)
-			{
+
+	for (i = 0, j = 0; array[i] != EOF; i++) {
+		if (array[i] == '\n') {
+			if(!is_newline && array[i + 1] != '\n' && array[i + 1] != EOF) {
 				array[j++] = array[i];
 				is_newline = true;
 				num_of_strings++;
-			}
-			else
+			} else
 				continue;
-		}
-		else if (isspace(array[i]))
-		{
-			if (!is_space && !is_newline)
-			{
+		} else if (isspace(array[i])) {
+			if (!is_space && !is_newline) {
 				array[j++] = array[i];
 				is_space = true;
-			}
-			else
+			} else
 				continue;
-		}
-		else
-		{
+		} else if (array[i] == ';') { //TODO: если что-то сломалось, то скорее всего из-за этого
+            while (array[i] != '\n' && array[i] != EOF)
+                i++;
+            i--;
+        } else {
 			array[j++] = array[i];
 			is_newline = false;
 			is_space = false;
 		}
 	}
+
 	array[j] = '\n';
 	return num_of_strings + 1;
 }

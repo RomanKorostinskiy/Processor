@@ -7,6 +7,7 @@ pop cx
 call Discr
 hlt
 
+;lol 123
 
 :Discr
 push bx
