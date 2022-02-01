@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../GeneralInclude/General.h"
+#include "../GeneralInclude/Proc_General.h"
 
 #include <stdio.h>
 #include <stdlib.h>

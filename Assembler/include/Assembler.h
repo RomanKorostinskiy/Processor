@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../GeneralInclude/General.h"
+#include "../GeneralInclude/Proc_General.h"
 
 
 //-------- Onegin variables --------
@@ -63,7 +63,7 @@ enum Assembler_errors
     SYNTAX_ERROR        = -2,
 };
 
-const int MAX_SIZE_OF_CODE = 4096; //TODO придумать как считать размер кода
+const int MAX_SIZE_OF_CODE = 16384; //TODO придумать как считать размер кода
 
 //--------- Onegin functions ---------
 

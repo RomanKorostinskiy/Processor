@@ -1,0 +1,68 @@
+
+; statement #1
+
+push 10.00000000
+pop [0] ;x
+
+; statement #2
+
+push [0] ;x
+push 10.00000000
+sub
+push 0
+je skip_if_1
+
+; statement #2
+
+push 0.00000000
+out
+push 0
+jmp skip_else_1
+:skip_if_1
+
+; statement #2
+
+push 1.00000000
+out
+push 0
+:skip_else_1
+
+; statement #3
+
+push [0] ;x
+push 5.00000000
+add
+pop [0] ;x
+
+; statement #4
+
+push [0] ;x
+push 15.00000000
+sub
+push 0
+je skip_if_2
+
+; statement #4
+
+push 0.00000000
+out
+push 0
+jmp skip_else_2
+:skip_if_2
+
+; statement #4
+
+push 1.00000000
+out
+push 0
+:skip_else_2
+
+; statement #5
+
+push [0] ;x
+out
+push 0
+
+;HLT
+
+hlt

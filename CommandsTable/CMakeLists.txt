@@ -5,4 +5,4 @@ set(CMAKE_CXX_STANDARD 14)
 
 add_executable(CommandsTable
         Table.cpp
-        ../GeneralInclude/General.h)
+        ../GeneralInclude/Proc_General.h)

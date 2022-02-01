@@ -1,0 +1,4 @@
+/snap/clion/178/bin/cmake/linux/bin/cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_MAKE_PROGRAM=/snap/clion/178/bin/ninja/linux/ninja -G Ninja /home/roman/CS/C/Huawei/Processor/CommandsTable
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /home/roman/CS/C/Huawei/Processor/CommandsTable/cmake-build-debug

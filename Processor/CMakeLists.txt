@@ -10,5 +10,5 @@ add_executable(Processor
         src/Processor.cpp
         src/ProcessorFunc.cpp
         ../RequiredPrograms/StackFunc.cpp
-        ../GeneralInclude/General.h
+        ../GeneralInclude/Proc_General.h
         include/Processor.h)

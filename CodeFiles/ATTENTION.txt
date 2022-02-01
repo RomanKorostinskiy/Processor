@@ -1,0 +1,1 @@
+The programs don't work. The Processor has been changed (now it does not return values to stack after comparison). Programs will be fixed soon (or not soon).

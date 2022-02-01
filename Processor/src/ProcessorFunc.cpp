@@ -185,8 +185,6 @@ int Processor (Processor_t* processor)
                 else
                     processor->ip += sizeof(size_t);
 
-                StackPush(&processor->stack, var1);
-                StackPush(&processor->stack, var2);
                 break;
 
             case CMD_JAE:
@@ -200,8 +198,6 @@ int Processor (Processor_t* processor)
                 else
                     processor->ip += sizeof(size_t);
 
-                StackPush(&processor->stack, var1);
-                StackPush(&processor->stack, var2);
                 break;
 
             case CMD_JB:
@@ -215,8 +211,6 @@ int Processor (Processor_t* processor)
                 else
                     processor->ip += sizeof(size_t);
 
-                StackPush(&processor->stack, var1);
-                StackPush(&processor->stack, var2);
                 break;
 
             case CMD_JBE:
@@ -230,8 +224,6 @@ int Processor (Processor_t* processor)
                 else
                     processor->ip += sizeof(size_t);
 
-                StackPush(&processor->stack, var1);
-                StackPush(&processor->stack, var2);
                 break;
 
             case CMD_JE:
@@ -245,8 +237,6 @@ int Processor (Processor_t* processor)
                 else
                     processor->ip += sizeof(size_t);
 
-                StackPush(&processor->stack, var1);
-                StackPush(&processor->stack, var2);
                 break;
 
             case CMD_JNE:
@@ -260,8 +250,6 @@ int Processor (Processor_t* processor)
                 else
                     processor->ip += sizeof(size_t);
 
-                StackPush(&processor->stack, var1);
-                StackPush(&processor->stack, var2);
                 break;
 
             case CMD_CALL:

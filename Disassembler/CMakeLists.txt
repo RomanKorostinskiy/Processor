@@ -10,4 +10,4 @@ add_executable(Disassembler
         include/Disasm.h
         src/Disasm.cpp
         src/DisasmFunc.cpp
-        ../GeneralInclude/General.h)
+        ../GeneralInclude/Proc_General.h)

@@ -1,49 +1,21 @@
-in
-pop ax
-push ax
-push 1
-jb 43
-pop
-pop
-call 58
-jmp 54
-push -1
-out
-hlt
-push cx
-out
-hlt
-push ax
-push 1
-jbe 161
-pop
+push 10
+pop [0]
+push [0]
 push 2
-jbe 135
-pop
-push 1
+div
+pop [1]
+push [0]
+push 10
 sub
-pop ax
-call 58
-push cx
-pop dx
-push bx
-push cx
+push 0
+je102
+push [0]
+out
+jmp 112
+push [1]
+out
+push [1]
+push 3
 add
-push dx
-pop bx
-pop cx
-ret
-pop
-push 1
-pop cx
-push 0
-pop bx
-pop ax
-ret
-pop
-push 0
-pop cx
-push 0
-pop bx
-pop ax
-ret
+out
+hlt

@@ -15,7 +15,6 @@ int GetFileNames (Text *text, int argc, char* argv[])
 
 int ReadFromFile (Text *text)
 {
-
 	FILE *fp = nullptr;
 
 	fp = fopen(text->input_file_name, "r");
