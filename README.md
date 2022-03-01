@@ -1,14 +1,12 @@
 # Processor
----
+
 ## Processor architecture:
----
 Processor has 8 registers: ```ax, bx, cx, dx, ex, fx, gx, hx```
 
 Processor has acces to RAM: ```4k``` - if you using type ```int```; ```8k``` if you using type ```double```
 By default double type of data is used. To change type of data in processot you should use defines: ```#define INT_DATA``` or ```#define FLOAT_DATA```
 
 ## Processor instructions:
----
 
 - ```hlt``` - End of program
 
