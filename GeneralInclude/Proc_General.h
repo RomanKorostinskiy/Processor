@@ -50,4 +50,4 @@ enum Arguments
     ARGS_NO   = 0,
 };
 
-const size_t RAM_SIZE = 4096;
+const size_t RAM_SIZE = 1024;
