@@ -25,11 +25,11 @@ The default data type is double. To change type of data in processot you should 
 
 ---
 
-- ```add``` - adds two last values in *Stack* and push result
+- ```add``` - adds two last values in *Stack* (```first + second```) and push result
 
 - ```sub``` - subtracts two last values in *Stack* (```first - second```) and push result
 
-- ```mul``` - multiplies two last values in *Stack* and push result
+- ```mul``` - multiplies two last values in *Stack* (```first * second```) and push result
 
 - ```div``` - divides two last values in *Stack* (```first / second```) and push result
 
