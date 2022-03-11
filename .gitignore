@@ -1,0 +1,9 @@
+#Assembler ignore
+Assembler/.idea/
+Assembler/cmake-build-debug/
+#Disassembler ignore
+Disassembler/.idea/
+Disassembler/cmake-build-debug/
+#Processor ignore
+Processor/.idea/
+Processor/cmake-build-debug/
